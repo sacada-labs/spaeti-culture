@@ -1,102 +1,65 @@
 # Sit-in Spaeti 🍺
 
-A mobile-first web application to find Spaetis (convenience stores) in Berlin that have sitting places.
+A mobile-first web application to find Spaetis (convenience stores) in Berlin that have sitting places. Discover the best spots to grab a drink and relax with detailed information about seating options, amenities, opening hours, and more.
 
-## Features
+## Screenshot
 
-- 🗺️ Interactive map showing all Spaetis with seating
-- 🔍 Search functionality by name or location
-- 🏠 Filter by seating type (Indoor, Outdoor, Both)
-- 📱 Mobile-optimized design for on-the-go use
-- 📋 List view for easy browsing
-- 🎨 Modern, beautiful UI/UX
+![Sit-in Spaeti Application Screenshot](./screenshot.png)
 
-## Tech Stack
-
-- **React 18** - UI framework
-- **TanStack Query (React Query)** - Data fetching and state management
-- **Vite** - Build tool and dev server
-- **Leaflet.js** - Map functionality
-- **OpenStreetMap** - Map tiles (free and open-source)
+> **Note:** Add a screenshot of your application here. Take a screenshot showing the main interface with the list of Spaetis and filters visible.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- **Node.js** 18+ and **npm** (or **yarn**/ **pnpm**)
 
 ### Installation
 
-1. Install dependencies:
+1. Clone the repository:
+```bash
+git clone https://github.com/sacada-labs/sit-in-spaeti.git
+cd sit-in-spaeti
+```
+
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-2. Start the development server:
+### Development
+
+Start the development server:
+
 ```bash
 npm run dev
 ```
 
-3. Open your browser to `http://localhost:3000`
+The application will open automatically in your browser at `http://localhost:3000`. The dev server supports hot module replacement (HMR), so changes will be reflected immediately.
 
-### Build for Production
+### Build
+
+Build the application for production:
 
 ```bash
 npm run build
 ```
 
-The built files will be in the `dist/` directory.
+The production-ready files will be generated in the `dist/` directory, optimized and minified for deployment.
 
 ### Preview Production Build
+
+Preview the production build locally:
 
 ```bash
 npm run preview
 ```
 
-## Project Structure
-
-```
-src/
-  ├── components/     # React components
-  │   ├── Header.jsx
-  │   ├── SearchBar.jsx
-  │   ├── Filters.jsx
-  │   ├── Map.jsx
-  │   ├── ListPanel.jsx
-  │   └── Loading.jsx
-  ├── hooks/          # Custom React hooks
-  │   ├── useSpaetis.js
-  │   └── useFilteredSpaetis.js
-  ├── data/           # Data and API functions
-  │   └── spaetiData.js
-  ├── App.jsx         # Main app component
-  ├── main.jsx        # Entry point
-  └── index.css       # Global styles
-```
-
-## Mobile Usage
-
-The app is optimized for mobile devices:
-- Touch-friendly interface
-- Responsive design
-- Fast loading
-- Easy navigation while walking
+This serves the built files from the `dist/` directory, allowing you to test the production build before deploying.
 
 ## Data
 
-Currently uses dummy data with 10 sample Spaetis across Berlin. Real data can be integrated later by updating the `fetchSpaetis` function in `src/data/spaetiData.js`.
-
-## Routing Service
-
-The app uses OSRM's demo server for routing by default, which is **NOT suitable for production**. For production use, please configure your own routing service. See [ROUTING.md](./ROUTING.md) for details.
-
-## Browser Support
-
-Works on all modern browsers including:
-- Chrome/Edge
-- Firefox
-- Safari
-- Mobile browsers
+Currently uses dummy data with 10 sample Spaetis across Berlin. 
 
 ## License
 
