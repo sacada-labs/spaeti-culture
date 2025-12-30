@@ -76,11 +76,14 @@ const fetchSpatisSchema = z.object({
 const fetchSpatis = createServerFn()
 	.inputValidator(fetchSpatisSchema)
 	.handler(async ({ data }) => {
-		const { hasToilet, priceLevel, acceptsCard, hasSitting, latitude, longitude } = data;
-
-		if (latitude !== undefined && longitude !== undefined) {
-			console.log("User location:", { latitude, longitude });
-		}
+		const {
+			hasToilet,
+			priceLevel,
+			acceptsCard,
+			hasSitting,
+			latitude,
+			longitude,
+		} = data;
 
 		const conditions = [];
 
