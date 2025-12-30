@@ -2,13 +2,55 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
-import { useId, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
 import { z } from "zod";
 import { Loading } from "../components/Loading";
 import { db } from "../db";
 import { spatis } from "../db/schema";
 
 export const Route = createFileRoute("/")({ component: App });
+
+type UserLocation = {
+	latitude: number;
+	longitude: number;
+} | null;
+
+function useGeolocation() {
+	const [location, setLocation] = useState<UserLocation>(null);
+	const [error, setError] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
+
+	const requestLocation = useCallback(() => {
+		if (!navigator.geolocation) {
+			setError("Geolocation is not supported by your browser");
+			return;
+		}
+
+		setIsLoading(true);
+		setError(null);
+
+		navigator.geolocation.getCurrentPosition(
+			(position) => {
+				setLocation({
+					latitude: position.coords.latitude,
+					longitude: position.coords.longitude,
+				});
+				setIsLoading(false);
+			},
+			(err) => {
+				setError(err.message);
+				setIsLoading(false);
+			},
+			{
+				enableHighAccuracy: true,
+				timeout: 10000,
+				maximumAge: 300000, // 5 minutes cache
+			},
+		);
+	}, []);
+
+	return { location, error, isLoading, requestLocation };
+}
 
 const priceLevels = ["$", "$$", "$$$"] as const;
 
@@ -55,10 +97,21 @@ function App() {
 		"$" | "$$" | "$$$" | undefined
 	>(undefined);
 	const [acceptsCardFilter, setAcceptsCardFilter] = useState(false);
+	const {
+		location: userLocation,
+		error: locationError,
+		isLoading: locationLoading,
+		requestLocation,
+	} = useGeolocation();
 	const fetchSpatisFn = useServerFn(fetchSpatis);
 	const toiletFilterId = useId();
 	const priceLevelFilterId = useId();
 	const acceptsCardFilterId = useId();
+
+	// Request location on mount
+	useEffect(() => {
+		requestLocation();
+	}, [requestLocation]);
 
 	const spatiesQuery = useQuery({
 		queryKey: ["spaties", hasToiletFilter, priceLevelFilter, acceptsCardFilter],
@@ -94,6 +147,27 @@ function App() {
 				<p className="text-gray-400 text-sm">
 					FIND SPAETIS WITH SEATING IN BERLIN.
 				</p>
+				{/* Location Status */}
+				<div className="mt-3 text-xs">
+					{locationLoading && (
+						<span className="text-gray-500">📍 Getting your location...</span>
+					)}
+					{locationError && (
+						<button
+							type="button"
+							onClick={requestLocation}
+							className="text-red-400 hover:text-red-300"
+						>
+							📍 {locationError} - Click to retry
+						</button>
+					)}
+					{userLocation && (
+						<span className="text-green-500">
+							📍 Location: {userLocation.latitude.toFixed(4)},{" "}
+							{userLocation.longitude.toFixed(4)}
+						</span>
+					)}
+				</div>
 			</header>
 
 			<main className="px-6 pb-20 max-w-7xl mx-auto">
