@@ -7,3 +7,7 @@ if (!process.env.DATABASE_URL) {
 }
 
 export const db = drizzle(process.env.DATABASE_URL, { schema });
+
+// Export schema for convenience
+export { schema };
+export { spatis } from "./schema.ts";

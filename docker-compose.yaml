@@ -1,6 +1,7 @@
 services:
   postgres:
-    image: postgres:17
+    image: postgis/postgis:17-master
+    platform: linux/amd64
     ports:
       - 5432:5432
     environment:
