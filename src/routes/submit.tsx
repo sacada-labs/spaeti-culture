@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
-import { Globe, Send } from "lucide-react";
-import { useId, useState } from "react";
+import { AlertCircle, CheckCircle, Globe, Send, X } from "lucide-react";
+import { useEffect, useId, useState } from "react";
 import { z } from "zod";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
@@ -14,6 +14,48 @@ import {
 	seatingEnum,
 	submissions,
 } from "../db/schema";
+
+function Toast({
+	message,
+	type,
+	onClose,
+}: {
+	message: string;
+	type: "success" | "error";
+	onClose: () => void;
+}) {
+	useEffect(() => {
+		const timer = setTimeout(onClose, 5000);
+		return () => clearTimeout(timer);
+	}, [onClose]);
+
+	return (
+		<div
+			role="alert"
+			aria-live="polite"
+			className={`toast-enter fixed bottom-24 left-1/2 z-50 flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl border ${
+				type === "success"
+					? "bg-green-500/10 border-green-500/30 text-green-400"
+					: "bg-red-500/10 border-red-500/30 text-red-400"
+			}`}
+		>
+			{type === "success" ? (
+				<CheckCircle size={20} />
+			) : (
+				<AlertCircle size={20} />
+			)}
+			<span className="text-sm font-medium">{message}</span>
+			<button
+				type="button"
+				onClick={onClose}
+				className="ml-2 p-1 hover:bg-white/10 rounded transition-colors"
+				aria-label="Dismiss notification"
+			>
+				<X size={14} />
+			</button>
+		</div>
+	);
+}
 
 const submitSubmissionSchema = z.object({
 	googleMapsUrl: z.string().url("Please enter a valid Google Maps URL"),
@@ -42,6 +84,10 @@ function SubmitPage() {
 	const googleMapsId = useId();
 	const seatingId = useId();
 	const toiletId = useId();
+	const [toast, setToast] = useState<{
+		message: string;
+		type: "success" | "error";
+	} | null>(null);
 
 	const [formData, setFormData] = useState<SubmissionForm>({
 		googleMapsUrl: "",
@@ -56,7 +102,17 @@ function SubmitPage() {
 			return submitSubmissionFn({ data });
 		},
 		onSuccess: () => {
-			navigate({ to: "/" });
+			setToast({
+				message: "Thanks! Your submission is under review.",
+				type: "success",
+			});
+			setTimeout(() => navigate({ to: "/" }), 1500);
+		},
+		onError: (error) => {
+			setToast({
+				message: error.message || "Something went wrong. Please try again.",
+				type: "error",
+			});
 		},
 	});
 
@@ -89,10 +145,18 @@ function SubmitPage() {
 		<div className="min-h-screen bg-black text-white selection:bg-green-500 selection:text-black">
 			<Header />
 
+			{toast && (
+				<Toast
+					message={toast.message}
+					type={toast.type}
+					onClose={() => setToast(null)}
+				/>
+			)}
+
 			<main className="px-6 pb-32 max-w-3xl mx-auto">
 				<form
 					onSubmit={handleSubmit}
-					className="bg-gray-900/40 border border-gray-800 rounded-3xl p-8 space-y-8"
+					className="bg-gray-900/40 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-8"
 				>
 					<div className="space-y-6">
 						<div>
@@ -130,11 +194,12 @@ function SubmitPage() {
 								<select
 									id={seatingId}
 									name="seating"
+									required
 									value={formData.seating}
 									onChange={(e) =>
 										updateSeating(e.target.value as SubmissionForm["seating"])
 									}
-									className="w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none"
+									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer"
 								>
 									<option value="UNKNOWN">Unknown</option>
 									<option value="INDOOR">Indoor</option>
@@ -152,13 +217,14 @@ function SubmitPage() {
 								<select
 									id={toiletId}
 									name="hasToilet"
+									required
 									value={formData.hasToilet}
 									onChange={(e) =>
 										updateHasToilet(
 											e.target.value as SubmissionForm["hasToilet"],
 										)
 									}
-									className="w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none"
+									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer"
 								>
 									<option value="UNKNOWN">Unknown</option>
 									<option value="YES">Yes</option>
@@ -221,7 +287,7 @@ function SubmitPage() {
 					<button
 						type="submit"
 						disabled={mutation.isPending}
-						className="w-full py-4 bg-green-500 text-black font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-green-400 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed group"
+						className="w-full min-h-[52px] py-4 bg-green-500 text-black font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-green-400 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed group"
 					>
 						{mutation.isPending ? (
 							<div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />

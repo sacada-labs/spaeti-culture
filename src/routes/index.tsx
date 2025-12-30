@@ -52,6 +52,7 @@ function useGeolocation() {
 	});
 	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
+	const [bypassed, setBypassed] = useState(false);
 
 	// Update loading state when location or error changes
 	useEffect(() => {
@@ -60,7 +61,12 @@ function useGeolocation() {
 		}
 	}, [location, error]);
 
-	return { location, error, isLoading };
+	const bypassError = () => {
+		setBypassed(true);
+		setIsLoading(false);
+	};
+
+	return { location, error: bypassed ? null : error, isLoading, bypassError };
 }
 
 const priceLevels = ["$", "$$", "$$$"] as const;
@@ -139,6 +145,7 @@ function App() {
 		location: userLocation,
 		error: locationError,
 		isLoading: locationLoading,
+		bypassError,
 	} = useGeolocation();
 	const fetchSpatisFn = useServerFn(fetchSpatis);
 
@@ -184,24 +191,33 @@ function App() {
 	if (locationError) {
 		return (
 			<div className="min-h-screen bg-black text-white flex items-center justify-center">
-				<div className="text-center max-w-md px-6 border border-red-500/20 bg-red-500/5 p-8 rounded-2xl">
-					<div className="w-16 h-16 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+				<div className="text-center max-w-md px-6 border border-amber-500/20 bg-amber-500/5 p-8 rounded-2xl">
+					<div className="w-16 h-16 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
 						<Navigation size={32} />
 					</div>
-					<h2 className="text-xl font-bold mb-2 uppercase tracking-tight text-red-400">
-						Location Required
+					<h2 className="text-xl font-bold mb-2 uppercase tracking-tight text-amber-400">
+						Location Unavailable
 					</h2>
 					<p className="text-gray-400 text-sm mb-6">
-						{locationError}. Please enable location access in your browser to
-						use Sit-in Späti.
+						{locationError}. You can still browse all Spätis, but they won't be
+						sorted by distance.
 					</p>
-					<button
-						type="button"
-						onClick={() => window.location.reload()}
-						className="px-6 py-2 bg-red-500 text-black font-bold rounded-full hover:bg-red-400 transition-colors"
-					>
-						Try Again
-					</button>
+					<div className="flex flex-col sm:flex-row gap-3 justify-center">
+						<button
+							type="button"
+							onClick={() => window.location.reload()}
+							className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px]"
+						>
+							Try Again
+						</button>
+						<button
+							type="button"
+							onClick={bypassError}
+							className="px-6 py-3 bg-green-500 text-black font-bold rounded-full hover:bg-green-400 transition-colors min-h-[48px]"
+						>
+							Browse Anyway
+						</button>
+					</div>
 				</div>
 			</div>
 		);
@@ -215,86 +231,100 @@ function App() {
 				{/* Filters Section */}
 				<div className="mb-10 sticky top-4 z-10">
 					<div className="bg-black/80 backdrop-blur-xl border border-gray-800 p-2 rounded-2xl flex flex-wrap items-center gap-2 shadow-2xl">
-						<button
-							type="button"
-							onClick={() => setHasSittingFilter(!hasSittingFilter)}
-							className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-								hasSittingFilter
-									? "bg-green-500 text-black"
-									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
-							}`}
-						>
-							<Armchair size={14} />
-							Has Sitting
-						</button>
+					<button
+						type="button"
+						aria-pressed={hasSittingFilter}
+						onClick={() => setHasSittingFilter(!hasSittingFilter)}
+						className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+							hasSittingFilter
+								? "bg-green-500 text-black"
+								: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
+						}`}
+					>
+						<Armchair size={16} />
+						<span className="hidden sm:inline">Has</span> Sitting
+					</button>
 
-						<button
-							type="button"
-							onClick={() => setHasToiletFilter(!hasToiletFilter)}
-							className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-								hasToiletFilter
-									? "bg-green-500 text-black"
-									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
-							}`}
-						>
-							<Toilet size={14} />
-							Toilet
-						</button>
+					<button
+						type="button"
+						aria-pressed={hasToiletFilter}
+						onClick={() => setHasToiletFilter(!hasToiletFilter)}
+						className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+							hasToiletFilter
+								? "bg-green-500 text-black"
+								: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
+						}`}
+					>
+						<Toilet size={16} />
+						Toilet
+					</button>
 
-						<button
-							type="button"
-							onClick={() => setAcceptsCardFilter(!acceptsCardFilter)}
-							className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-								acceptsCardFilter
-									? "bg-green-500 text-black"
-									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
-							}`}
-						>
-							<CreditCard size={14} />
-							Card
-						</button>
+					<button
+						type="button"
+						aria-pressed={acceptsCardFilter}
+						onClick={() => setAcceptsCardFilter(!acceptsCardFilter)}
+						className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+							acceptsCardFilter
+								? "bg-green-500 text-black"
+								: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
+						}`}
+					>
+						<CreditCard size={16} />
+						Card
+					</button>
 
-						<div className="h-6 w-px bg-gray-800 mx-1 hidden sm:block" />
+					<div className="h-6 w-px bg-gray-800 mx-1 hidden sm:block" />
 
-						<div className="flex items-center gap-1 bg-gray-900 p-1 rounded-xl">
-							{(["$", "$$", "$$$"] as const).map((level) => (
-								<button
-									type="button"
-									key={level}
-									onClick={() =>
-										setPriceLevelFilter(
-											priceLevelFilter === level ? undefined : level,
-										)
-									}
-									className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-										priceLevelFilter === level
-											? "bg-white text-black"
-											: "text-gray-500 hover:text-white"
-									}`}
-								>
-									{level}
-								</button>
-							))}
-						</div>
-
-						{(hasSittingFilter ||
-							hasToiletFilter ||
-							acceptsCardFilter ||
-							priceLevelFilter) && (
+					<fieldset
+						aria-label="Price level filter"
+						className="flex items-center gap-1 bg-gray-900 p-1.5 rounded-xl border-0 p-0 m-0"
+					>
+						{(
+							[
+								{ value: "$", label: "Budget" },
+								{ value: "$$", label: "Moderate" },
+								{ value: "$$$", label: "Premium" },
+							] as const
+						).map(({ value, label }) => (
 							<button
 								type="button"
-								onClick={() => {
-									setHasSittingFilter(false);
-									setHasToiletFilter(false);
-									setAcceptsCardFilter(false);
-									setPriceLevelFilter(undefined);
-								}}
-								className="ml-auto px-3 py-2 text-gray-500 hover:text-red-400 transition-colors"
-								title="Clear all filters"
+								key={value}
+								aria-pressed={priceLevelFilter === value}
+								aria-label={label}
+								onClick={() =>
+									setPriceLevelFilter(
+										priceLevelFilter === value ? undefined : value,
+									)
+								}
+								className={`min-w-[44px] min-h-[36px] px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+									priceLevelFilter === value
+										? "bg-white text-black"
+										: "text-gray-500 hover:text-white"
+								}`}
 							>
-								<Trash2 size={16} />
+								{value}
 							</button>
-						)}
+						))}
+					</fieldset>
+
+					{(hasSittingFilter ||
+						hasToiletFilter ||
+						acceptsCardFilter ||
+						priceLevelFilter) && (
+						<button
+							type="button"
+							onClick={() => {
+								setHasSittingFilter(false);
+								setHasToiletFilter(false);
+								setAcceptsCardFilter(false);
+								setPriceLevelFilter(undefined);
+							}}
+							className="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 text-gray-500 hover:text-red-400 transition-colors flex items-center justify-center"
+							aria-label="Clear all filters"
+						>
+							<Trash2 size={18} />
+						</button>
+					)}
 					</div>
 				</div>
 

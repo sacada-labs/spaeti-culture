@@ -36,7 +36,7 @@ function About() {
 						<h3 className="text-sm font-black uppercase tracking-widest text-white mb-4">
 							Community Driven
 						</h3>
-						<p className="text-gray-400 text-sm">
+						<p className="text-gray-400 text-sm leading-relaxed">
 							Every spot listed is vetted by locals. We focus on quality of
 							experience and authentic Berlin vibes.
 						</p>
@@ -45,7 +45,7 @@ function About() {
 						<h3 className="text-sm font-black uppercase tracking-widest text-white mb-4">
 							Privacy First
 						</h3>
-						<p className="text-gray-400 text-sm">
+						<p className="text-gray-400 text-sm leading-relaxed">
 							We use your geolocation only to find spots near you. We don't
 							store your movement history or sell your data.
 						</p>
@@ -57,36 +57,40 @@ function About() {
 						Get in Touch
 					</h2>
 					<div className="flex flex-wrap gap-4">
-						<button
-							type="button"
-							className="flex items-center gap-3 px-6 py-3 bg-gray-900 border border-gray-800 rounded-xl hover:border-green-500/50 hover:bg-gray-800 transition-all group"
+						<a
+							href="mailto:hello@sacadalabs.com"
+							className="flex items-center gap-3 px-6 py-3 bg-gray-900 border border-gray-800 rounded-xl hover:border-green-500/50 hover:bg-gray-800 transition-all group min-h-[48px]"
 						>
 							<Mail
 								size={18}
-								className="text-gray-500 group-hover:text-green-500"
+								className="text-gray-500 group-hover:text-green-500 transition-colors"
 							/>
 							<span className="text-sm font-bold">Contact Us</span>
-						</button>
-						<button
-							type="button"
-							className="flex items-center gap-3 px-6 py-3 bg-gray-900 border border-gray-800 rounded-xl hover:border-green-500/50 hover:bg-gray-800 transition-all group"
+						</a>
+						<a
+							href="https://github.com/sacadalabs/sit-in-spaeti"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="flex items-center gap-3 px-6 py-3 bg-gray-900 border border-gray-800 rounded-xl hover:border-green-500/50 hover:bg-gray-800 transition-all group min-h-[48px]"
 						>
 							<Github
 								size={18}
-								className="text-gray-500 group-hover:text-green-500"
+								className="text-gray-500 group-hover:text-green-500 transition-colors"
 							/>
 							<span className="text-sm font-bold">GitHub</span>
-						</button>
-						<button
-							type="button"
-							className="flex items-center gap-3 px-6 py-3 bg-gray-900 border border-gray-800 rounded-xl hover:border-green-500/50 hover:bg-gray-800 transition-all group"
+						</a>
+						<a
+							href="https://sacadalabs.com"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="flex items-center gap-3 px-6 py-3 bg-gray-900 border border-gray-800 rounded-xl hover:border-green-500/50 hover:bg-gray-800 transition-all group min-h-[48px]"
 						>
 							<Globe
 								size={18}
-								className="text-gray-500 group-hover:text-green-500"
+								className="text-gray-500 group-hover:text-green-500 transition-colors"
 							/>
 							<span className="text-sm font-bold">Sacada Labs</span>
-						</button>
+						</a>
 					</div>
 				</section>
 			</main>
