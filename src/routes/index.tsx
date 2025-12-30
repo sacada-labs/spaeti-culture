@@ -9,7 +9,7 @@ import {
 	MapPin,
 	Navigation,
 	Search,
-	Waves as Toilet,
+	Toilet,
 	Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
