@@ -3,13 +3,6 @@
   "dialect": "postgresql",
   "entries": [
     {
-      "idx": 0,
-      "version": "7",
-      "when": 1767108579607,
-      "tag": "0000_curious_toxin",
-      "breakpoints": true
-    },
-    {
       "idx": 1,
       "version": "7",
       "when": 1767110153499,
