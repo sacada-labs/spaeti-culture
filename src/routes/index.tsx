@@ -58,12 +58,18 @@ const fetchSpatisSchema = z.object({
 	hasToilet: z.boolean().optional(),
 	priceLevel: z.enum(priceLevels).optional(),
 	acceptsCard: z.boolean().optional(),
+	latitude: z.number().optional(),
+	longitude: z.number().optional(),
 });
 
 const fetchSpatis = createServerFn()
 	.inputValidator(fetchSpatisSchema)
 	.handler(async ({ data }) => {
-		const { hasToilet, priceLevel, acceptsCard } = data;
+		const { hasToilet, priceLevel, acceptsCard, latitude, longitude } = data;
+
+		if (latitude !== undefined && longitude !== undefined) {
+			console.log("User location:", { latitude, longitude });
+		}
 
 		const conditions = [];
 
@@ -114,13 +120,15 @@ function App() {
 	}, [requestLocation]);
 
 	const spatiesQuery = useQuery({
-		queryKey: ["spaties", hasToiletFilter, priceLevelFilter, acceptsCardFilter],
+		queryKey: ["spaties", hasToiletFilter, priceLevelFilter, acceptsCardFilter, userLocation],
 		queryFn: () =>
 			fetchSpatisFn({
 				data: {
 					hasToilet: hasToiletFilter ? true : undefined,
 					priceLevel: priceLevelFilter,
 					acceptsCard: acceptsCardFilter ? true : undefined,
+					latitude: userLocation?.latitude,
+					longitude: userLocation?.longitude,
 				},
 			}),
 	});
@@ -128,6 +136,7 @@ function App() {
 	if (spatiesQuery.isPending) {
 		return <Loading />;
 	}
+	
 	if (spatiesQuery.isError) {
 		return <div>Error: {spatiesQuery.error.message}</div>;
 	}
