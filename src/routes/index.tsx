@@ -1,10 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
-import { and, eq, sql } from "drizzle-orm";
-import { useEffect, useId, useState } from "react";
+import { and, eq, ne, sql } from "drizzle-orm";
+import {
+	Armchair,
+	Beer,
+	CreditCard,
+	MapPin,
+	Navigation,
+	Search,
+	Waves as Toilet,
+	Trash2,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
-import { Loading } from "../components/Loading";
 import { db } from "../db";
 import { spatis } from "../db/schema";
 
@@ -54,13 +63,12 @@ function useGeolocation() {
 }
 
 const priceLevels = ["$", "$$", "$$$"] as const;
-const seatingTypes = ["INDOOR", "OUTDOOR", "BOTH"] as const;
 
 const fetchSpatisSchema = z.object({
 	hasToilet: z.boolean().optional(),
 	priceLevel: z.enum(priceLevels).optional(),
 	acceptsCard: z.boolean().optional(),
-	seatingType: z.enum(seatingTypes).optional(),
+	hasSitting: z.boolean().optional(),
 	latitude: z.number().optional(),
 	longitude: z.number().optional(),
 });
@@ -68,7 +76,7 @@ const fetchSpatisSchema = z.object({
 const fetchSpatis = createServerFn()
 	.inputValidator(fetchSpatisSchema)
 	.handler(async ({ data }) => {
-		const { hasToilet, priceLevel, acceptsCard, seatingType, latitude, longitude } = data;
+		const { hasToilet, priceLevel, acceptsCard, hasSitting, latitude, longitude } = data;
 
 		if (latitude !== undefined && longitude !== undefined) {
 			console.log("User location:", { latitude, longitude });
@@ -88,8 +96,8 @@ const fetchSpatis = createServerFn()
 			conditions.push(eq(spatis.payment, acceptsCard ? "CARD" : "CASH_ONLY"));
 		}
 
-		if (seatingType !== undefined) {
-			conditions.push(eq(spatis.seating, seatingType));
+		if (hasSitting !== undefined) {
+			conditions.push(ne(spatis.seating, "UNKNOWN"));
 		}
 
 		// Build base query
@@ -122,19 +130,13 @@ function App() {
 		"$" | "$$" | "$$$" | undefined
 	>(undefined);
 	const [acceptsCardFilter, setAcceptsCardFilter] = useState(false);
-	const [seatingTypeFilter, setSeatingTypeFilter] = useState<
-		"INDOOR" | "OUTDOOR" | "BOTH" | undefined
-	>(undefined);
+	const [hasSittingFilter, setHasSittingFilter] = useState(false);
 	const {
 		location: userLocation,
 		error: locationError,
 		isLoading: locationLoading,
 	} = useGeolocation();
 	const fetchSpatisFn = useServerFn(fetchSpatis);
-	const toiletFilterId = useId();
-	const priceLevelFilterId = useId();
-	const acceptsCardFilterId = useId();
-	const seatingTypeFilterId = useId();
 
 	const spatiesQuery = useQuery({
 		queryKey: [
@@ -142,230 +144,310 @@ function App() {
 			hasToiletFilter,
 			priceLevelFilter,
 			acceptsCardFilter,
-			seatingTypeFilter,
+			hasSittingFilter,
 			userLocation,
 		],
 		queryFn: () => {
-			if (!userLocation) {
-				return [];
-			}
-
 			return fetchSpatisFn({
 				data: {
 					hasToilet: hasToiletFilter ? true : undefined,
 					priceLevel: priceLevelFilter,
 					acceptsCard: acceptsCardFilter ? true : undefined,
-					seatingType: seatingTypeFilter,
-					latitude: userLocation.latitude,
-					longitude: userLocation.longitude,
+					hasSitting: hasSittingFilter ? true : undefined,
+					latitude: userLocation?.latitude,
+					longitude: userLocation?.longitude,
 				},
 			});
 		},
-		enabled: !!userLocation, // Only run query when location is available
 	});
 
 	if (locationLoading) {
 		return (
 			<div className="min-h-screen bg-black text-white flex items-center justify-center">
 				<div className="text-center max-w-md px-6">
-					<div className="w-16 h-16 border-4 border-gray-800 border-t-green-500 rounded-full animate-spin mx-auto mb-4"></div>
-					<p className="text-gray-300 text-base mb-2">
-						Getting your location...
-					</p>
-					<p className="text-gray-500 text-sm">
-						We need your location to better tune your experience and show you
-						Spätis near you.
+					<div className="w-16 h-16 border-4 border-gray-800 border-t-green-500 rounded-full animate-spin mx-auto mb-6"></div>
+					<h2 className="text-xl font-bold mb-2 uppercase tracking-tight">
+						Locating...
+					</h2>
+					<p className="text-gray-400 text-sm">
+						We need your location to show you the best Spätis nearby.
 					</p>
 				</div>
 			</div>
 		);
 	}
 
-	if (locationError || !userLocation) {
+	if (locationError) {
 		return (
 			<div className="min-h-screen bg-black text-white flex items-center justify-center">
-				<div className="text-center max-w-md px-6">
-					<p className="text-red-400 mb-2 text-lg">
-						Unable to get your location
+				<div className="text-center max-w-md px-6 border border-red-500/20 bg-red-500/5 p-8 rounded-2xl">
+					<div className="w-16 h-16 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+						<Navigation size={32} />
+					</div>
+					<h2 className="text-xl font-bold mb-2 uppercase tracking-tight text-red-400">
+						Location Required
+					</h2>
+					<p className="text-gray-400 text-sm mb-6">
+						{locationError}. Please enable location access in your browser to
+						use Sit-in Späti.
 					</p>
-					<p className="text-gray-400 text-sm mb-4">
-						{locationError || "Location is required"}
-					</p>
-					<p className="text-gray-500 text-sm">
-						We need your location to better tune your experience and show you
-						Spätis near you. Please enable location access in your browser
-						settings.
-					</p>
+					<button
+						type="button"
+						onClick={() => window.location.reload()}
+						className="px-6 py-2 bg-red-500 text-black font-bold rounded-full hover:bg-red-400 transition-colors"
+					>
+						Try Again
+					</button>
 				</div>
 			</div>
 		);
 	}
 
-	if (spatiesQuery.isPending) {
-		return <Loading />;
-	}
-
-	if (spatiesQuery.isError) {
-		return <div>Error: {spatiesQuery.error.message}</div>;
-	}
-
-	const spaties = spatiesQuery.data;
-
 	return (
-		<div className="min-h-screen bg-black text-white">
+		<div className="min-h-screen bg-black text-white selection:bg-green-500 selection:text-black">
 			{/* Header */}
-			<header className="px-6 py-8">
-				<div className="flex items-center gap-3 mb-2">
-					<span className="text-2xl">🍺</span>
-					<h1 className="text-3xl font-bold tracking-tight text-green-500 uppercase">
-						SIT-IN SPAETI
-					</h1>
-				</div>
-				<p className="text-gray-400 text-sm">
-					FIND SPAETIS WITH SEATING IN BERLIN.
-				</p>
-				{/* Location Status */}
-				<div className="mt-3 text-xs">
-					<span className="text-green-500">
-						📍 Location: {userLocation.latitude.toFixed(4)},{" "}
-						{userLocation.longitude.toFixed(4)}
-					</span>
+			<header className="px-6 pt-12 pb-8 max-w-7xl mx-auto">
+				<div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+					<div>
+						<div className="flex items-center gap-3 mb-4">
+							<div className="w-12 h-12 bg-green-500 flex items-center justify-center rounded-xl rotate-3 hover:rotate-0 transition-transform">
+								<Beer className="text-black" size={28} />
+							</div>
+							<h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic">
+								Sit-in <span className="text-green-500">Spaeti</span>
+							</h1>
+						</div>
+						<p className="text-gray-400 font-medium tracking-wide uppercase text-xs md:text-sm">
+							Curated guide to Berlin's best late-night spots with seating.
+						</p>
+					</div>
+
+					{userLocation && (
+						<div className="flex items-center gap-2 px-4 py-2 bg-gray-900/50 border border-gray-800 rounded-full text-[10px] md:text-xs text-green-500 font-mono">
+							<MapPin size={12} className="animate-pulse" />
+							<span>
+								{userLocation.latitude.toFixed(4)},{" "}
+								{userLocation.longitude.toFixed(4)}
+							</span>
+						</div>
+					)}
 				</div>
 			</header>
 
-			<main className="px-6 pb-20 max-w-7xl mx-auto">
-				{/* Filters */}
-				<div className="mb-6 flex flex-wrap items-center gap-6">
-					<label
-						htmlFor={toiletFilterId}
-						className="flex items-center gap-2 cursor-pointer"
-					>
-						<input
-							id={toiletFilterId}
-							type="checkbox"
-							checked={hasToiletFilter}
-							onChange={(e) => setHasToiletFilter(e.target.checked)}
-							className="w-4 h-4 rounded border-gray-700 bg-gray-900 text-green-500 focus:ring-green-500 focus:ring-offset-0"
-						/>
-						<span className="text-sm text-gray-400">Has Toilet</span>
-					</label>
+			<main className="px-6 pb-32 max-w-7xl mx-auto">
+				{/* Filters Section */}
+				<div className="mb-10 sticky top-4 z-10">
+					<div className="bg-black/80 backdrop-blur-xl border border-gray-800 p-2 rounded-2xl flex flex-wrap items-center gap-2 shadow-2xl">
+						<button
+							type="button"
+							onClick={() => setHasSittingFilter(!hasSittingFilter)}
+							className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+								hasSittingFilter
+									? "bg-green-500 text-black"
+									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
+							}`}
+						>
+							<Armchair size={14} />
+							Has Sitting
+						</button>
 
-					<label
-						htmlFor={acceptsCardFilterId}
-						className="flex items-center gap-2 cursor-pointer"
-					>
-						<input
-							id={acceptsCardFilterId}
-							type="checkbox"
-							checked={acceptsCardFilter}
-							onChange={(e) => setAcceptsCardFilter(e.target.checked)}
-							className="w-4 h-4 rounded border-gray-700 bg-gray-900 text-green-500 focus:ring-green-500 focus:ring-offset-0"
-						/>
-						<span className="text-sm text-gray-400">Accepts Card</span>
-					</label>
+						<button
+							type="button"
+							onClick={() => setHasToiletFilter(!hasToiletFilter)}
+							className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+								hasToiletFilter
+									? "bg-green-500 text-black"
+									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
+							}`}
+						>
+							<Toilet size={14} />
+							Toilet
+						</button>
 
-					<div className="flex items-center gap-2">
-						<label
-							htmlFor={seatingTypeFilterId}
-							className="text-sm text-gray-400"
+						<button
+							type="button"
+							onClick={() => setAcceptsCardFilter(!acceptsCardFilter)}
+							className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+								acceptsCardFilter
+									? "bg-green-500 text-black"
+									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
+							}`}
 						>
-							Seating:
-						</label>
-						<select
-							id={seatingTypeFilterId}
-							value={seatingTypeFilter ?? ""}
-							onChange={(e) =>
-								setSeatingTypeFilter(
-									e.target.value === ""
-										? undefined
-										: (e.target.value as "INDOOR" | "OUTDOOR" | "BOTH"),
-								)
-							}
-							className="bg-gray-900 border border-gray-800 rounded px-3 py-1.5 text-white text-sm focus:outline-none focus:border-green-500"
-						>
-							<option value="">All</option>
-							<option value="INDOOR">Indoor</option>
-							<option value="OUTDOOR">Outdoor</option>
-							<option value="BOTH">Both</option>
-						</select>
-					</div>
+							<CreditCard size={14} />
+							Card
+						</button>
 
-					<div className="flex items-center gap-2">
-						<label
-							htmlFor={priceLevelFilterId}
-							className="text-sm text-gray-400"
-						>
-							Price:
-						</label>
-						<select
-							id={priceLevelFilterId}
-							value={priceLevelFilter ?? ""}
-							onChange={(e) =>
-								setPriceLevelFilter(
-									e.target.value === ""
-										? undefined
-										: (e.target.value as "$" | "$$" | "$$$"),
-								)
-							}
-							className="bg-gray-900 border border-gray-800 rounded px-3 py-1.5 text-white text-sm focus:outline-none focus:border-green-500"
-						>
-							<option value="">All</option>
-							<option value="$">$</option>
-							<option value="$$">$$</option>
-							<option value="$$$">$$$</option>
-						</select>
+						<div className="h-6 w-px bg-gray-800 mx-1 hidden sm:block" />
+
+						<div className="flex items-center gap-1 bg-gray-900 p-1 rounded-xl">
+							{(["$", "$$", "$$$"] as const).map((level) => (
+								<button
+									type="button"
+									key={level}
+									onClick={() =>
+										setPriceLevelFilter(
+											priceLevelFilter === level ? undefined : level,
+										)
+									}
+									className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+										priceLevelFilter === level
+											? "bg-white text-black"
+											: "text-gray-500 hover:text-white"
+									}`}
+								>
+									{level}
+								</button>
+							))}
+						</div>
+
+						{(hasSittingFilter ||
+							hasToiletFilter ||
+							acceptsCardFilter ||
+							priceLevelFilter) && (
+							<button
+								type="button"
+								onClick={() => {
+									setHasSittingFilter(false);
+									setHasToiletFilter(false);
+									setAcceptsCardFilter(false);
+									setPriceLevelFilter(undefined);
+								}}
+								className="ml-auto px-3 py-2 text-gray-500 hover:text-red-400 transition-colors"
+								title="Clear all filters"
+							>
+								<Trash2 size={16} />
+							</button>
+						)}
 					</div>
 				</div>
 
 				{/* Späti Grid */}
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-					{spaties.map((spati) => (
-						<div
-							key={spati.id}
-							className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 hover:border-gray-700 transition-colors"
-						>
-							<h2 className="text-xl font-bold mb-2">{spati.name}</h2>
-							<p className="text-gray-400 text-sm mb-3">{spati.address}</p>
-							{spati.description && (
-								<p className="text-gray-300 text-sm mb-4">
-									{spati.description}
-								</p>
-							)}
-							<div className="flex flex-wrap gap-2">
-								<span className="px-3 py-1 text-xs font-medium rounded border bg-blue-500/20 text-blue-300 border-blue-500/30">
-									{spati.seating}
-								</span>
-								{spati.hasToilet === "YES" && (
-									<span className="px-3 py-1 text-xs font-medium rounded border bg-yellow-500/20 text-yellow-300 border-yellow-500/30">
-										TOILET
-									</span>
+				{spatiesQuery.isPending ? (
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						{[1, 2, 3, 4, 5, 6].map((i) => (
+							<div
+								key={`skeleton-${i}`}
+								className="h-64 bg-gray-900/50 border border-gray-800 rounded-2xl animate-pulse"
+							/>
+						))}
+					</div>
+				) : spatiesQuery.isError ? (
+					<div className="bg-red-500/10 border border-red-500/20 p-8 rounded-2xl text-center">
+						<p className="text-red-400">
+							Failed to load Spätis: {spatiesQuery.error.message}
+						</p>
+					</div>
+				) : spatiesQuery.data?.length === 0 ? (
+					<div className="bg-gray-900/50 border border-gray-800 p-12 rounded-2xl text-center">
+						<Search size={48} className="mx-auto text-gray-700 mb-4" />
+						<h3 className="text-xl font-bold mb-2">No Spätis found</h3>
+						<p className="text-gray-500 max-w-xs mx-auto">
+							Try adjusting your filters or search area to find more results.
+						</p>
+					</div>
+				) : (
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						{spatiesQuery.data.map((spati) => (
+							<div
+								key={spati.id}
+								className="group bg-gray-900/40 border border-gray-800 rounded-2xl p-6 hover:border-green-500/50 transition-all hover:shadow-2xl hover:shadow-green-500/5 flex flex-col"
+							>
+								<div className="flex justify-between items-start mb-4">
+									<h2 className="text-xl font-bold group-hover:text-green-500 transition-colors">
+										{spati.name}
+									</h2>
+									<div className="flex gap-0.5">
+										{[1, 2, 3].map((level) => (
+											<span
+												key={`price-${spati.id}-${level}`}
+												className={`text-xs ${
+													level <= (spati.priceLevel?.length || 0)
+														? "text-green-500"
+														: "text-gray-700"
+												}`}
+											>
+												$
+											</span>
+										))}
+									</div>
+								</div>
+
+								<div className="flex items-start gap-2 mb-4">
+									<MapPin
+										size={14}
+										className="text-gray-500 mt-1 flex-shrink-0"
+									/>
+									<p className="text-gray-400 text-sm leading-snug">
+										{spati.address}
+									</p>
+								</div>
+
+								{spati.description && (
+									<p className="text-gray-500 text-sm mb-6 line-clamp-2">
+										{spati.description}
+									</p>
 								)}
-								{spati.payment === "CARD" && (
-									<span className="px-3 py-1 text-xs font-medium rounded border bg-cyan-500/20 text-cyan-300 border-cyan-500/30">
-										CARD
-									</span>
-								)}
-								<span
-									className={`px-3 py-1 text-xs font-medium rounded border ${
-										spati.priceLevel.includes("EXPENSIVE")
-											? "bg-purple-500/20 text-purple-300 border-purple-500/30"
-											: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30"
-									}`}
-								>
-									{spati.priceLevel}
-								</span>
+
+								<div className="mt-auto pt-6 border-t border-gray-800/50 flex flex-wrap gap-2">
+									<div
+										className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${
+											spati.seating !== "UNKNOWN"
+												? "bg-green-500/10 text-green-500 border border-green-500/20"
+												: "bg-gray-800 text-gray-500"
+										}`}
+									>
+										<Armchair size={10} />
+										{spati.seating}
+									</div>
+
+									{spati.hasToilet === "YES" && (
+										<div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
+											<Toilet size={10} />
+											Toilet
+										</div>
+									)}
+
+									{spati.payment === "CARD" && (
+										<div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/20">
+											<CreditCard size={10} />
+											Card
+										</div>
+									)}
+								</div>
 							</div>
-						</div>
-					))}
-				</div>
+						))}
+					</div>
+				)}
 			</main>
 
 			{/* Footer */}
-			<footer className="fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-sm border-t border-gray-900 px-6 py-4">
-				<div className="max-w-7xl mx-auto">
-					<p className="text-xs text-gray-500 flex items-center gap-2">
-						© 2025 Sacada Labs. Handcrafted in Berlin <span>🥨</span>
+			<footer className="fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-t border-gray-900 px-6 py-6 z-20">
+				<div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+					<p className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 flex items-center gap-2">
+						© 2025 Sacada Labs <span className="text-gray-800">•</span> Berlin{" "}
+						<span>🥨</span>
 					</p>
+
+					<div className="flex items-center gap-6">
+						<button
+							type="button"
+							className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 hover:text-green-500 transition-colors cursor-pointer"
+						>
+							About
+						</button>
+						<button
+							type="button"
+							className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 hover:text-green-500 transition-colors cursor-pointer"
+						>
+							Submit Spot
+						</button>
+						<div className="flex items-center gap-2 px-3 py-1 bg-green-500/5 rounded-full border border-green-500/10">
+							<div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+							<span className="text-[10px] font-bold text-green-500/80 uppercase tracking-widest">
+								System Live
+							</span>
+						</div>
+					</div>
 				</div>
 			</footer>
 		</div>
