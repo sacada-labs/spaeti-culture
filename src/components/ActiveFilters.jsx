@@ -81,27 +81,29 @@ export const ActiveFilters = ({
 
     return (
         <div className="active-filters-bar">
-            <div className="active-filters-label">Active Filters:</div>
-            <div className="active-filters-list">
-                {activeFilters.map((filter) => (
-                    <span key={filter.key} className="active-filter-chip">
-                        <span className="active-filter-label">{filter.label}</span>
-                        <button
-                            className="active-filter-remove"
-                            onClick={filter.onClear}
-                            aria-label={`Remove ${filter.label} filter`}
-                        >
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
-                    </span>
-                ))}
+            <div className="active-filters-content">
+                <div className="active-filters-label">Active Filters:</div>
+                <div className="active-filters-list">
+                    {activeFilters.map((filter) => (
+                        <span key={filter.key} className="active-filter-chip">
+                            <span className="active-filter-label">{filter.label}</span>
+                            <button
+                                className="active-filter-remove"
+                                onClick={filter.onClear}
+                                aria-label={`Remove ${filter.label} filter`}
+                            >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </span>
+                    ))}
+                </div>
+                <button className="clear-all-filters" onClick={onClearAll}>
+                    Clear All
+                </button>
             </div>
-            <button className="clear-all-filters" onClick={onClearAll}>
-                Clear All
-            </button>
         </div>
     )
 }

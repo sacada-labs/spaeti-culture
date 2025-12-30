@@ -173,18 +173,24 @@ body {
 
 .filter-toggle-btn {
     width: 100%;
-    padding: var(--spacing-md);
+    padding: 0;
     background: var(--surface);
     border: none;
     border-bottom: 1px solid var(--border-color);
     border-top: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     cursor: pointer;
     transition: all 0.2s ease;
     -webkit-tap-highlight-color: transparent;
+}
+
+.filter-toggle-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .filter-toggle-btn:hover {
@@ -226,13 +232,18 @@ body {
 
 /* Active Filters Bar */
 .active-filters-bar {
-    padding: var(--spacing-md);
     background: var(--surface);
     border-bottom: 1px solid var(--border-color);
+}
+
+.active-filters-content {
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
     flex-wrap: wrap;
+    padding: var(--spacing-md);
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .active-filters-label {

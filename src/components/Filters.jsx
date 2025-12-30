@@ -111,25 +111,27 @@ export const Filters = ({
                 onClick={() => setIsExpanded(!isExpanded)}
                 aria-expanded={isExpanded}
             >
-                <span className="filter-toggle-label">
-                    {isExpanded ? 'Hide Filters' : 'Show Filters'}
-                </span>
-                {hasActiveFilters && !isExpanded && (
-                    <span className="filter-toggle-badge">
-                        {[seatingFilter, toiletFilter, priceFilter, cardFilter, neighborhoodFilter, isOpenFilter].filter(f => f !== 'all').length}
+                <div className="filter-toggle-content">
+                    <span className="filter-toggle-label">
+                        {isExpanded ? 'Hide Filters' : 'Show Filters'}
                     </span>
-                )}
-                <svg 
-                    className={`filter-toggle-icon ${isExpanded ? 'expanded' : ''}`}
-                    width="20" 
-                    height="20" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="2.5"
-                >
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
+                    {hasActiveFilters && !isExpanded && (
+                        <span className="filter-toggle-badge">
+                            {[seatingFilter, toiletFilter, priceFilter, cardFilter, neighborhoodFilter, isOpenFilter].filter(f => f !== 'all').length}
+                        </span>
+                    )}
+                    <svg 
+                        className={`filter-toggle-icon ${isExpanded ? 'expanded' : ''}`}
+                        width="20" 
+                        height="20" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth="2.5"
+                    >
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
             </button>
             {isExpanded && (
                 <div className="filters-container">
