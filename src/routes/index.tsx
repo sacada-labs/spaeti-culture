@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { useEffect, useId, useState } from "react";
 import { z } from "zod";
 import { Loading } from "../components/Loading";
@@ -86,15 +86,27 @@ const fetchSpatis = createServerFn()
 			conditions.push(eq(spatis.payment, acceptsCard ? "CARD" : "CASH_ONLY"));
 		}
 
-		if (conditions.length > 0) {
-			const records = await db
-				.select()
-				.from(spatis)
-				.where(and(...conditions));
+		// Build base query
+		const baseQuery =
+			conditions.length > 0
+				? db
+						.select()
+						.from(spatis)
+						.where(and(...conditions))
+				: db.select().from(spatis);
+
+		// Sort by distance if user location is provided
+		if (latitude !== undefined && longitude !== undefined) {
+			const records = await baseQuery.orderBy(
+				sql`ST_DistanceSphere(
+					${spatis.location},
+					ST_MakePoint(${longitude}, ${latitude})
+				)`,
+			);
 			return records;
 		}
 
-		const records = await db.select().from(spatis);
+		const records = await baseQuery;
 		return records;
 	});
 
@@ -115,27 +127,39 @@ function App() {
 	const acceptsCardFilterId = useId();
 
 	const spatiesQuery = useQuery({
-		queryKey: ["spaties", hasToiletFilter, priceLevelFilter, acceptsCardFilter, userLocation],
-		queryFn: () =>
-			fetchSpatisFn({
+		queryKey: [
+			"spaties",
+			hasToiletFilter,
+			priceLevelFilter,
+			acceptsCardFilter,
+			userLocation,
+		],
+		queryFn: () => {
+			if (!userLocation) {
+				return [];
+			}
+
+			return fetchSpatisFn({
 				data: {
 					hasToilet: hasToiletFilter ? true : undefined,
 					priceLevel: priceLevelFilter,
 					acceptsCard: acceptsCardFilter ? true : undefined,
-					latitude: userLocation?.latitude,
-					longitude: userLocation?.longitude,
+					latitude: userLocation.latitude,
+					longitude: userLocation.longitude,
 				},
-			}),
+			});
+		},
 		enabled: !!userLocation, // Only run query when location is available
 	});
 
-	// Block until location is available
 	if (locationLoading) {
 		return (
 			<div className="min-h-screen bg-black text-white flex items-center justify-center">
 				<div className="text-center max-w-md px-6">
 					<div className="w-16 h-16 border-4 border-gray-800 border-t-green-500 rounded-full animate-spin mx-auto mb-4"></div>
-					<p className="text-gray-300 text-base mb-2">Getting your location...</p>
+					<p className="text-gray-300 text-base mb-2">
+						Getting your location...
+					</p>
 					<p className="text-gray-500 text-sm">
 						We need your location to better tune your experience and show you
 						Spätis near you.
@@ -149,7 +173,9 @@ function App() {
 		return (
 			<div className="min-h-screen bg-black text-white flex items-center justify-center">
 				<div className="text-center max-w-md px-6">
-					<p className="text-red-400 mb-2 text-lg">Unable to get your location</p>
+					<p className="text-red-400 mb-2 text-lg">
+						Unable to get your location
+					</p>
 					<p className="text-gray-400 text-sm mb-4">
 						{locationError || "Location is required"}
 					</p>
@@ -166,7 +192,7 @@ function App() {
 	if (spatiesQuery.isPending) {
 		return <Loading />;
 	}
-	
+
 	if (spatiesQuery.isError) {
 		return <div>Error: {spatiesQuery.error.message}</div>;
 	}
