@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { useId, useState } from "react";
 import { z } from "zod";
 import { Loading } from "../components/Loading";
@@ -10,32 +10,58 @@ import { spatis } from "../db/schema";
 
 export const Route = createFileRoute("/")({ component: App });
 
+const priceLevels = ["$", "$$", "$$$"] as const;
+
 const fetchSpatisSchema = z.object({
 	hasToilet: z.boolean().optional(),
+	priceLevel: z.enum(priceLevels).optional(),
 });
 
 const fetchSpatis = createServerFn()
 	.inputValidator(fetchSpatisSchema)
 	.handler(async ({ data }) => {
-		const hasToilet = data.hasToilet;
-		
+		const { hasToilet, priceLevel } = data;
+
+		const conditions = [];
+
 		if (hasToilet !== undefined) {
-			const records = await db.select().from(spatis).where(eq(spatis.hasToilet, hasToilet ? "YES" : "NO"));
+			conditions.push(eq(spatis.hasToilet, hasToilet ? "YES" : "NO"));
+		}
+
+		if (priceLevel !== undefined) {
+			conditions.push(eq(spatis.priceLevel, priceLevel));
+		}
+
+		if (conditions.length > 0) {
+			const records = await db
+				.select()
+				.from(spatis)
+				.where(and(...conditions));
 			return records;
 		}
-		
+
 		const records = await db.select().from(spatis);
 		return records;
 	});
 
 function App() {
 	const [hasToiletFilter, setHasToiletFilter] = useState(false);
+	const [priceLevelFilter, setPriceLevelFilter] = useState<
+		"$" | "$$" | "$$$" | undefined
+	>(undefined);
 	const fetchSpatisFn = useServerFn(fetchSpatis);
 	const toiletFilterId = useId();
+	const priceLevelFilterId = useId();
 
 	const spatiesQuery = useQuery({
-		queryKey: ["spaties", hasToiletFilter],
-		queryFn: () => fetchSpatisFn({ data: { hasToilet: hasToiletFilter ? true : undefined } }),
+		queryKey: ["spaties", hasToiletFilter, priceLevelFilter],
+		queryFn: () =>
+			fetchSpatisFn({
+				data: {
+					hasToilet: hasToiletFilter ? true : undefined,
+					priceLevel: priceLevelFilter,
+				},
+			}),
 	});
 
 	if (spatiesQuery.isPending) {
@@ -64,8 +90,11 @@ function App() {
 
 			<main className="px-6 pb-20 max-w-7xl mx-auto">
 				{/* Filters */}
-				<div className="mb-6 flex flex-wrap gap-4">
-					<label htmlFor={toiletFilterId} className="flex items-center gap-2 cursor-pointer">
+				<div className="mb-6 flex flex-wrap items-center gap-6">
+					<label
+						htmlFor={toiletFilterId}
+						className="flex items-center gap-2 cursor-pointer"
+					>
 						<input
 							id={toiletFilterId}
 							type="checkbox"
@@ -75,6 +104,32 @@ function App() {
 						/>
 						<span className="text-sm text-gray-400">Has Toilet</span>
 					</label>
+
+					<div className="flex items-center gap-2">
+						<label
+							htmlFor={priceLevelFilterId}
+							className="text-sm text-gray-400"
+						>
+							Price:
+						</label>
+						<select
+							id={priceLevelFilterId}
+							value={priceLevelFilter ?? ""}
+							onChange={(e) =>
+								setPriceLevelFilter(
+									e.target.value === ""
+										? undefined
+										: (e.target.value as "$" | "$$" | "$$$"),
+								)
+							}
+							className="bg-gray-900 border border-gray-800 rounded px-3 py-1.5 text-white text-sm focus:outline-none focus:border-green-500"
+						>
+							<option value="">All</option>
+							<option value="$">$</option>
+							<option value="$$">$$</option>
+							<option value="$$$">$$$</option>
+						</select>
+					</div>
 				</div>
 
 				{/* Späti Grid */}
