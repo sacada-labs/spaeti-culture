@@ -15,12 +15,13 @@ const priceLevels = ["$", "$$", "$$$"] as const;
 const fetchSpatisSchema = z.object({
 	hasToilet: z.boolean().optional(),
 	priceLevel: z.enum(priceLevels).optional(),
+	acceptsCard: z.boolean().optional(),
 });
 
 const fetchSpatis = createServerFn()
 	.inputValidator(fetchSpatisSchema)
 	.handler(async ({ data }) => {
-		const { hasToilet, priceLevel } = data;
+		const { hasToilet, priceLevel, acceptsCard } = data;
 
 		const conditions = [];
 
@@ -30,6 +31,10 @@ const fetchSpatis = createServerFn()
 
 		if (priceLevel !== undefined) {
 			conditions.push(eq(spatis.priceLevel, priceLevel));
+		}
+
+		if (acceptsCard !== undefined) {
+			conditions.push(eq(spatis.payment, acceptsCard ? "CARD" : "CASH_ONLY"));
 		}
 
 		if (conditions.length > 0) {
@@ -49,17 +54,20 @@ function App() {
 	const [priceLevelFilter, setPriceLevelFilter] = useState<
 		"$" | "$$" | "$$$" | undefined
 	>(undefined);
+	const [acceptsCardFilter, setAcceptsCardFilter] = useState(false);
 	const fetchSpatisFn = useServerFn(fetchSpatis);
 	const toiletFilterId = useId();
 	const priceLevelFilterId = useId();
+	const acceptsCardFilterId = useId();
 
 	const spatiesQuery = useQuery({
-		queryKey: ["spaties", hasToiletFilter, priceLevelFilter],
+		queryKey: ["spaties", hasToiletFilter, priceLevelFilter, acceptsCardFilter],
 		queryFn: () =>
 			fetchSpatisFn({
 				data: {
 					hasToilet: hasToiletFilter ? true : undefined,
 					priceLevel: priceLevelFilter,
+					acceptsCard: acceptsCardFilter ? true : undefined,
 				},
 			}),
 	});
@@ -103,6 +111,20 @@ function App() {
 							className="w-4 h-4 rounded border-gray-700 bg-gray-900 text-green-500 focus:ring-green-500 focus:ring-offset-0"
 						/>
 						<span className="text-sm text-gray-400">Has Toilet</span>
+					</label>
+
+					<label
+						htmlFor={acceptsCardFilterId}
+						className="flex items-center gap-2 cursor-pointer"
+					>
+						<input
+							id={acceptsCardFilterId}
+							type="checkbox"
+							checked={acceptsCardFilter}
+							onChange={(e) => setAcceptsCardFilter(e.target.checked)}
+							className="w-4 h-4 rounded border-gray-700 bg-gray-900 text-green-500 focus:ring-green-500 focus:ring-offset-0"
+						/>
+						<span className="text-sm text-gray-400">Accepts Card</span>
 					</label>
 
 					<div className="flex items-center gap-2">
