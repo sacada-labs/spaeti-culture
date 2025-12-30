@@ -36,3 +36,13 @@ export const spatis = pgTable("spatis", {
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+export const submissions = pgTable("submissions", {
+	id: serial().primaryKey(),
+	googleMapsUrl: text().notNull(),
+	seating: seatingEnum("seating").notNull().default("UNKNOWN"),
+	hasToilet: hasToiletEnum("has_toilet").notNull().default("UNKNOWN"),
+	priceLevel: priceLevelEnum("price_level").notNull(),
+	payment: paymentEnum("payment").notNull(),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+});

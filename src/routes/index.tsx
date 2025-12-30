@@ -438,12 +438,12 @@ function App() {
 						>
 							About
 						</Link>
-						<button
-							type="button"
+						<Link
+							to="/submit"
 							className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 hover:text-green-500 transition-colors cursor-pointer"
 						>
 							Submit Spot
-						</button>
+						</Link>
 						<div className="flex items-center gap-2 px-3 py-1 bg-green-500/5 rounded-full border border-green-500/10">
 							<div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
 							<span className="text-[10px] font-bold text-green-500/80 uppercase tracking-widest">
