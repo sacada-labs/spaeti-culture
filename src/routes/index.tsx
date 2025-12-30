@@ -54,11 +54,13 @@ function useGeolocation() {
 }
 
 const priceLevels = ["$", "$$", "$$$"] as const;
+const seatingTypes = ["INDOOR", "OUTDOOR", "BOTH"] as const;
 
 const fetchSpatisSchema = z.object({
 	hasToilet: z.boolean().optional(),
 	priceLevel: z.enum(priceLevels).optional(),
 	acceptsCard: z.boolean().optional(),
+	seatingType: z.enum(seatingTypes).optional(),
 	latitude: z.number().optional(),
 	longitude: z.number().optional(),
 });
@@ -66,7 +68,7 @@ const fetchSpatisSchema = z.object({
 const fetchSpatis = createServerFn()
 	.inputValidator(fetchSpatisSchema)
 	.handler(async ({ data }) => {
-		const { hasToilet, priceLevel, acceptsCard, latitude, longitude } = data;
+		const { hasToilet, priceLevel, acceptsCard, seatingType, latitude, longitude } = data;
 
 		if (latitude !== undefined && longitude !== undefined) {
 			console.log("User location:", { latitude, longitude });
@@ -84,6 +86,10 @@ const fetchSpatis = createServerFn()
 
 		if (acceptsCard !== undefined) {
 			conditions.push(eq(spatis.payment, acceptsCard ? "CARD" : "CASH_ONLY"));
+		}
+
+		if (seatingType !== undefined) {
+			conditions.push(eq(spatis.seating, seatingType));
 		}
 
 		// Build base query
@@ -116,6 +122,9 @@ function App() {
 		"$" | "$$" | "$$$" | undefined
 	>(undefined);
 	const [acceptsCardFilter, setAcceptsCardFilter] = useState(false);
+	const [seatingTypeFilter, setSeatingTypeFilter] = useState<
+		"INDOOR" | "OUTDOOR" | "BOTH" | undefined
+	>(undefined);
 	const {
 		location: userLocation,
 		error: locationError,
@@ -125,6 +134,7 @@ function App() {
 	const toiletFilterId = useId();
 	const priceLevelFilterId = useId();
 	const acceptsCardFilterId = useId();
+	const seatingTypeFilterId = useId();
 
 	const spatiesQuery = useQuery({
 		queryKey: [
@@ -132,6 +142,7 @@ function App() {
 			hasToiletFilter,
 			priceLevelFilter,
 			acceptsCardFilter,
+			seatingTypeFilter,
 			userLocation,
 		],
 		queryFn: () => {
@@ -144,6 +155,7 @@ function App() {
 					hasToilet: hasToiletFilter ? true : undefined,
 					priceLevel: priceLevelFilter,
 					acceptsCard: acceptsCardFilter ? true : undefined,
+					seatingType: seatingTypeFilter,
 					latitude: userLocation.latitude,
 					longitude: userLocation.longitude,
 				},
@@ -251,6 +263,32 @@ function App() {
 						/>
 						<span className="text-sm text-gray-400">Accepts Card</span>
 					</label>
+
+					<div className="flex items-center gap-2">
+						<label
+							htmlFor={seatingTypeFilterId}
+							className="text-sm text-gray-400"
+						>
+							Seating:
+						</label>
+						<select
+							id={seatingTypeFilterId}
+							value={seatingTypeFilter ?? ""}
+							onChange={(e) =>
+								setSeatingTypeFilter(
+									e.target.value === ""
+										? undefined
+										: (e.target.value as "INDOOR" | "OUTDOOR" | "BOTH"),
+								)
+							}
+							className="bg-gray-900 border border-gray-800 rounded px-3 py-1.5 text-white text-sm focus:outline-none focus:border-green-500"
+						>
+							<option value="">All</option>
+							<option value="INDOOR">Indoor</option>
+							<option value="OUTDOOR">Outdoor</option>
+							<option value="BOTH">Both</option>
+						</select>
+					</div>
 
 					<div className="flex items-center gap-2">
 						<label
