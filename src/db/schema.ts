@@ -1,10 +1,10 @@
 import {
+	geometry,
+	pgEnum,
 	pgTable,
 	serial,
 	text,
 	timestamp,
-	pgEnum,
-	geometry,
 } from "drizzle-orm/pg-core";
 
 export const seatingEnum = pgEnum("seating", [
