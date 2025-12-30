@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { and, eq, ne, sql } from "drizzle-orm";
 import {
 	Armchair,
-	Beer,
 	CreditCard,
 	MapPin,
 	Navigation,
@@ -14,6 +13,8 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { z } from "zod";
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
 import { db } from "../db";
 import { spatis } from "../db/schema";
 
@@ -208,34 +209,7 @@ function App() {
 
 	return (
 		<div className="min-h-screen bg-black text-white selection:bg-green-500 selection:text-black">
-			{/* Header */}
-			<header className="px-6 pt-12 pb-8 max-w-7xl mx-auto">
-				<div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-					<div>
-						<div className="flex items-center gap-3 mb-4">
-							<div className="w-12 h-12 bg-green-500 flex items-center justify-center rounded-xl rotate-3 hover:rotate-0 transition-transform">
-								<Beer className="text-black" size={28} />
-							</div>
-							<h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic">
-								Sit-in <span className="text-green-500">Spaeti</span>
-							</h1>
-						</div>
-						<p className="text-gray-400 font-medium tracking-wide uppercase text-xs md:text-sm">
-							Curated guide to Berlin's best late-night spots with seating.
-						</p>
-					</div>
-
-					{userLocation && (
-						<div className="flex items-center gap-2 px-4 py-2 bg-gray-900/50 border border-gray-800 rounded-full text-[10px] md:text-xs text-green-500 font-mono">
-							<MapPin size={12} className="animate-pulse" />
-							<span>
-								{userLocation.latitude.toFixed(4)},{" "}
-								{userLocation.longitude.toFixed(4)}
-							</span>
-						</div>
-					)}
-				</div>
-			</header>
+			<Header userLocation={userLocation} />
 
 			<main className="px-6 pb-32 max-w-7xl mx-auto">
 				{/* Filters Section */}
@@ -423,36 +397,7 @@ function App() {
 				)}
 			</main>
 
-			{/* Footer */}
-			<footer className="fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-t border-gray-900 px-6 py-6 z-20">
-				<div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-					<p className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 flex items-center gap-2">
-						© 2025 Sacada Labs <span className="text-gray-800">•</span> Berlin{" "}
-						<span>🥨</span>
-					</p>
-
-					<div className="flex items-center gap-6">
-						<Link
-							to="/about"
-							className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 hover:text-green-500 transition-colors cursor-pointer"
-						>
-							About
-						</Link>
-						<Link
-							to="/submit"
-							className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 hover:text-green-500 transition-colors cursor-pointer"
-						>
-							Submit Spot
-						</Link>
-						<div className="flex items-center gap-2 px-3 py-1 bg-green-500/5 rounded-full border border-green-500/10">
-							<div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-							<span className="text-[10px] font-bold text-green-500/80 uppercase tracking-widest">
-								System Live
-							</span>
-						</div>
-					</div>
-				</div>
-			</footer>
+			<Footer />
 		</div>
 	);
 }

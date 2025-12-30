@@ -1,9 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
-import { ArrowLeft, Beer, Globe, Send } from "lucide-react";
+import { Globe, Send } from "lucide-react";
 import { useId, useState } from "react";
 import { z } from "zod";
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
 import { db } from "../db";
 import {
 	hasToiletEnum,
@@ -85,32 +87,7 @@ function SubmitPage() {
 
 	return (
 		<div className="min-h-screen bg-black text-white selection:bg-green-500 selection:text-black">
-			<header className="px-6 pt-12 pb-8 max-w-3xl mx-auto">
-				<Link
-					to="/"
-					className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8 group"
-				>
-					<ArrowLeft
-						size={16}
-						className="group-hover:-translate-x-1 transition-transform"
-					/>
-					<span className="text-xs font-bold uppercase tracking-widest">
-						Back to Explore
-					</span>
-				</Link>
-
-				<div className="flex items-center gap-4 mb-4">
-					<div className="w-10 h-10 bg-green-500 flex items-center justify-center rounded-xl rotate-3">
-						<Beer className="text-black" size={24} />
-					</div>
-					<h1 className="text-3xl font-black tracking-tighter text-white uppercase italic">
-						Submit a <span className="text-green-500">Spot</span>
-					</h1>
-				</div>
-				<p className="text-gray-400 font-medium tracking-wide uppercase text-xs">
-					Share a spot by sending us its Google Maps link.
-				</p>
-			</header>
+			<Header />
 
 			<main className="px-6 pb-32 max-w-3xl mx-auto">
 				<form
@@ -260,6 +237,8 @@ function SubmitPage() {
 					</button>
 				</form>
 			</main>
+
+			<Footer />
 		</div>
 	);
 }
