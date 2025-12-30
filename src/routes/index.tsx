@@ -1,25 +1,41 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
+import { eq } from "drizzle-orm";
+import { useId, useState } from "react";
+import { z } from "zod";
 import { Loading } from "../components/Loading";
 import { db } from "../db";
 import { spatis } from "../db/schema";
 
 export const Route = createFileRoute("/")({ component: App });
 
-const fetchSpatis = createServerFn({
-	method: "GET",
-}).handler(async () => {
-	const records = await db.select().from(spatis);
-	return records;
+const fetchSpatisSchema = z.object({
+	hasToilet: z.boolean().optional(),
 });
 
+const fetchSpatis = createServerFn()
+	.inputValidator(fetchSpatisSchema)
+	.handler(async ({ data }) => {
+		const hasToilet = data.hasToilet;
+		
+		if (hasToilet !== undefined) {
+			const records = await db.select().from(spatis).where(eq(spatis.hasToilet, hasToilet ? "YES" : "NO"));
+			return records;
+		}
+		
+		const records = await db.select().from(spatis);
+		return records;
+	});
+
 function App() {
+	const [hasToiletFilter, setHasToiletFilter] = useState(false);
 	const fetchSpatisFn = useServerFn(fetchSpatis);
+	const toiletFilterId = useId();
 
 	const spatiesQuery = useQuery({
-		queryKey: ["spaties"],
-		queryFn: () => fetchSpatisFn(),
+		queryKey: ["spaties", hasToiletFilter],
+		queryFn: () => fetchSpatisFn({ data: { hasToilet: hasToiletFilter ? true : undefined } }),
 	});
 
 	if (spatiesQuery.isPending) {
@@ -47,6 +63,20 @@ function App() {
 			</header>
 
 			<main className="px-6 pb-20 max-w-7xl mx-auto">
+				{/* Filters */}
+				<div className="mb-6 flex flex-wrap gap-4">
+					<label htmlFor={toiletFilterId} className="flex items-center gap-2 cursor-pointer">
+						<input
+							id={toiletFilterId}
+							type="checkbox"
+							checked={hasToiletFilter}
+							onChange={(e) => setHasToiletFilter(e.target.checked)}
+							className="w-4 h-4 rounded border-gray-700 bg-gray-900 text-green-500 focus:ring-green-500 focus:ring-offset-0"
+						/>
+						<span className="text-sm text-gray-400">Has Toilet</span>
+					</label>
+				</div>
+
 				{/* Späti Grid */}
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 					{spaties.map((spati) => (
@@ -65,7 +95,7 @@ function App() {
 								<span className="px-3 py-1 text-xs font-medium rounded border bg-blue-500/20 text-blue-300 border-blue-500/30">
 									{spati.seating}
 								</span>
-								{spati.hasToilet && (
+								{spati.hasToilet === "YES" && (
 									<span className="px-3 py-1 text-xs font-medium rounded border bg-yellow-500/20 text-yellow-300 border-yellow-500/30">
 										TOILET
 									</span>
