@@ -231,100 +231,100 @@ function App() {
 				{/* Filters Section */}
 				<div className="mb-10 sticky top-4 z-10">
 					<div className="bg-black/80 backdrop-blur-xl border border-gray-800 p-2 rounded-2xl flex flex-wrap items-center gap-2 shadow-2xl">
-					<button
-						type="button"
-						aria-pressed={hasSittingFilter}
-						onClick={() => setHasSittingFilter(!hasSittingFilter)}
-						className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-							hasSittingFilter
-								? "bg-green-500 text-black"
-								: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
-						}`}
-					>
-						<Armchair size={16} />
-						<span className="hidden sm:inline">Has</span> Sitting
-					</button>
-
-					<button
-						type="button"
-						aria-pressed={hasToiletFilter}
-						onClick={() => setHasToiletFilter(!hasToiletFilter)}
-						className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-							hasToiletFilter
-								? "bg-green-500 text-black"
-								: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
-						}`}
-					>
-						<Toilet size={16} />
-						Toilet
-					</button>
-
-					<button
-						type="button"
-						aria-pressed={acceptsCardFilter}
-						onClick={() => setAcceptsCardFilter(!acceptsCardFilter)}
-						className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-							acceptsCardFilter
-								? "bg-green-500 text-black"
-								: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
-						}`}
-					>
-						<CreditCard size={16} />
-						Card
-					</button>
-
-					<div className="h-6 w-px bg-gray-800 mx-1 hidden sm:block" />
-
-					<fieldset
-						aria-label="Price level filter"
-						className="flex items-center gap-1 bg-gray-900 p-1.5 rounded-xl border-0 p-0 m-0"
-					>
-						{(
-							[
-								{ value: "$", label: "Budget" },
-								{ value: "$$", label: "Moderate" },
-								{ value: "$$$", label: "Premium" },
-							] as const
-						).map(({ value, label }) => (
-							<button
-								type="button"
-								key={value}
-								aria-pressed={priceLevelFilter === value}
-								aria-label={label}
-								onClick={() =>
-									setPriceLevelFilter(
-										priceLevelFilter === value ? undefined : value,
-									)
-								}
-								className={`min-w-[44px] min-h-[36px] px-3 py-2 rounded-lg text-xs font-bold transition-all ${
-									priceLevelFilter === value
-										? "bg-white text-black"
-										: "text-gray-500 hover:text-white"
-								}`}
-							>
-								{value}
-							</button>
-						))}
-					</fieldset>
-
-					{(hasSittingFilter ||
-						hasToiletFilter ||
-						acceptsCardFilter ||
-						priceLevelFilter) && (
 						<button
 							type="button"
-							onClick={() => {
-								setHasSittingFilter(false);
-								setHasToiletFilter(false);
-								setAcceptsCardFilter(false);
-								setPriceLevelFilter(undefined);
-							}}
-							className="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 text-gray-500 hover:text-red-400 transition-colors flex items-center justify-center"
-							aria-label="Clear all filters"
+							aria-pressed={hasSittingFilter}
+							onClick={() => setHasSittingFilter(!hasSittingFilter)}
+							className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+								hasSittingFilter
+									? "bg-green-500 text-black"
+									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
+							}`}
 						>
-							<Trash2 size={18} />
+							<Armchair size={16} />
+							<span className="hidden sm:inline">Has</span> Sitting
 						</button>
-					)}
+
+						<button
+							type="button"
+							aria-pressed={hasToiletFilter}
+							onClick={() => setHasToiletFilter(!hasToiletFilter)}
+							className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+								hasToiletFilter
+									? "bg-green-500 text-black"
+									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
+							}`}
+						>
+							<Toilet size={16} />
+							Toilet
+						</button>
+
+						<button
+							type="button"
+							aria-pressed={acceptsCardFilter}
+							onClick={() => setAcceptsCardFilter(!acceptsCardFilter)}
+							className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+								acceptsCardFilter
+									? "bg-green-500 text-black"
+									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
+							}`}
+						>
+							<CreditCard size={16} />
+							Card
+						</button>
+
+						<div className="h-6 w-px bg-gray-800 mx-1 hidden sm:block" />
+
+						<fieldset
+							aria-label="Price level filter"
+							className="flex items-center gap-1 bg-gray-900 p-1.5 rounded-xl border-0 p-0 m-0"
+						>
+							{(
+								[
+									{ value: "$", label: "Budget" },
+									{ value: "$$", label: "Moderate" },
+									{ value: "$$$", label: "Premium" },
+								] as const
+							).map(({ value, label }) => (
+								<button
+									type="button"
+									key={value}
+									aria-pressed={priceLevelFilter === value}
+									aria-label={label}
+									onClick={() =>
+										setPriceLevelFilter(
+											priceLevelFilter === value ? undefined : value,
+										)
+									}
+									className={`min-w-[44px] min-h-[36px] px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+										priceLevelFilter === value
+											? "bg-white text-black"
+											: "text-gray-500 hover:text-white"
+									}`}
+								>
+									{value}
+								</button>
+							))}
+						</fieldset>
+
+						{(hasSittingFilter ||
+							hasToiletFilter ||
+							acceptsCardFilter ||
+							priceLevelFilter) && (
+							<button
+								type="button"
+								onClick={() => {
+									setHasSittingFilter(false);
+									setHasToiletFilter(false);
+									setAcceptsCardFilter(false);
+									setPriceLevelFilter(undefined);
+								}}
+								className="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 text-gray-500 hover:text-red-400 transition-colors flex items-center justify-center"
+								aria-label="Clear all filters"
+							>
+								<Trash2 size={18} />
+							</button>
+						)}
 					</div>
 				</div>
 

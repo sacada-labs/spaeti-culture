@@ -22,7 +22,8 @@ export function Header({ userLocation }: HeaderProps) {
 						</h1>
 					</Link>
 					<p className="text-gray-500 font-medium tracking-wide uppercase text-[10px] sm:text-xs md:text-sm max-w-md">
-						Find Berlin's best late-night spots with seating, toilets & card payment.
+						Find Berlin's best late-night spots with seating, toilets & card
+						payment.
 					</p>
 				</div>
 
@@ -39,4 +40,3 @@ export function Header({ userLocation }: HeaderProps) {
 		</header>
 	);
 }
-
