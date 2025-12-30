@@ -45,8 +45,8 @@ function About() {
 						neighborhood atmosphere.
 					</p>
 					<p className="text-gray-400 leading-relaxed">
-						<span className="text-white font-bold italic">Sit-in Späti</span> is a
-						curated community resource designed to help Berliners and visitors
+						<span className="text-white font-bold italic">Sit-in Späti</span> is
+						a curated community resource designed to help Berliners and visitors
 						find those rare gems: Spätis with dedicated seating, available
 						toilets, and card payment support.
 					</p>
@@ -82,21 +82,30 @@ function About() {
 							type="button"
 							className="flex items-center gap-3 px-6 py-3 bg-gray-900 border border-gray-800 rounded-xl hover:border-green-500/50 hover:bg-gray-800 transition-all group"
 						>
-							<Mail size={18} className="text-gray-500 group-hover:text-green-500" />
+							<Mail
+								size={18}
+								className="text-gray-500 group-hover:text-green-500"
+							/>
 							<span className="text-sm font-bold">Contact Us</span>
 						</button>
 						<button
 							type="button"
 							className="flex items-center gap-3 px-6 py-3 bg-gray-900 border border-gray-800 rounded-xl hover:border-green-500/50 hover:bg-gray-800 transition-all group"
 						>
-							<Github size={18} className="text-gray-500 group-hover:text-green-500" />
+							<Github
+								size={18}
+								className="text-gray-500 group-hover:text-green-500"
+							/>
 							<span className="text-sm font-bold">GitHub</span>
 						</button>
 						<button
 							type="button"
 							className="flex items-center gap-3 px-6 py-3 bg-gray-900 border border-gray-800 rounded-xl hover:border-green-500/50 hover:bg-gray-800 transition-all group"
 						>
-							<Globe size={18} className="text-gray-500 group-hover:text-green-500" />
+							<Globe
+								size={18}
+								className="text-gray-500 group-hover:text-green-500"
+							/>
 							<span className="text-sm font-bold">Sacada Labs</span>
 						</button>
 					</div>
@@ -121,4 +130,3 @@ function About() {
 		</div>
 	);
 }
-
