@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { and, eq, ne, sql } from "drizzle-orm";
 import {
@@ -429,12 +429,12 @@ function App() {
 					</p>
 
 					<div className="flex items-center gap-6">
-						<button
-							type="button"
+						<Link
+							to="/about"
 							className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 hover:text-green-500 transition-colors cursor-pointer"
 						>
 							About
-						</button>
+						</Link>
 						<button
 							type="button"
 							className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 hover:text-green-500 transition-colors cursor-pointer"
