@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
-import { useCallback, useEffect, useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { z } from "zod";
 import { Loading } from "../components/Loading";
 import { db } from "../db";
@@ -16,40 +16,41 @@ type UserLocation = {
 } | null;
 
 function useGeolocation() {
-	const [location, setLocation] = useState<UserLocation>(null);
-	const [error, setError] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
-
-	const requestLocation = useCallback(() => {
-		if (!navigator.geolocation) {
+	const [location, setLocation] = useState<UserLocation>(() => {
+		// Lazy initialization - request immediately
+		if (typeof window !== "undefined" && navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(
+				(position) => {
+					setLocation({
+						latitude: position.coords.latitude,
+						longitude: position.coords.longitude,
+					});
+				},
+				(err) => {
+					setError(err.message);
+				},
+				{
+					enableHighAccuracy: true,
+					timeout: 10000,
+					maximumAge: 300000, // 5 minutes cache
+				},
+			);
+		} else if (typeof window !== "undefined") {
 			setError("Geolocation is not supported by your browser");
-			return;
 		}
+		return null;
+	});
+	const [error, setError] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 
-		setIsLoading(true);
-		setError(null);
+	// Update loading state when location or error changes
+	useEffect(() => {
+		if (location !== null || error !== null) {
+			setIsLoading(false);
+		}
+	}, [location, error]);
 
-		navigator.geolocation.getCurrentPosition(
-			(position) => {
-				setLocation({
-					latitude: position.coords.latitude,
-					longitude: position.coords.longitude,
-				});
-				setIsLoading(false);
-			},
-			(err) => {
-				setError(err.message);
-				setIsLoading(false);
-			},
-			{
-				enableHighAccuracy: true,
-				timeout: 10000,
-				maximumAge: 300000, // 5 minutes cache
-			},
-		);
-	}, []);
-
-	return { location, error, isLoading, requestLocation };
+	return { location, error, isLoading };
 }
 
 const priceLevels = ["$", "$$", "$$$"] as const;
@@ -107,17 +108,11 @@ function App() {
 		location: userLocation,
 		error: locationError,
 		isLoading: locationLoading,
-		requestLocation,
 	} = useGeolocation();
 	const fetchSpatisFn = useServerFn(fetchSpatis);
 	const toiletFilterId = useId();
 	const priceLevelFilterId = useId();
 	const acceptsCardFilterId = useId();
-
-	// Request location on mount
-	useEffect(() => {
-		requestLocation();
-	}, [requestLocation]);
 
 	const spatiesQuery = useQuery({
 		queryKey: ["spaties", hasToiletFilter, priceLevelFilter, acceptsCardFilter, userLocation],
@@ -131,7 +126,42 @@ function App() {
 					longitude: userLocation?.longitude,
 				},
 			}),
+		enabled: !!userLocation, // Only run query when location is available
 	});
+
+	// Block until location is available
+	if (locationLoading) {
+		return (
+			<div className="min-h-screen bg-black text-white flex items-center justify-center">
+				<div className="text-center max-w-md px-6">
+					<div className="w-16 h-16 border-4 border-gray-800 border-t-green-500 rounded-full animate-spin mx-auto mb-4"></div>
+					<p className="text-gray-300 text-base mb-2">Getting your location...</p>
+					<p className="text-gray-500 text-sm">
+						We need your location to better tune your experience and show you
+						Spätis near you.
+					</p>
+				</div>
+			</div>
+		);
+	}
+
+	if (locationError || !userLocation) {
+		return (
+			<div className="min-h-screen bg-black text-white flex items-center justify-center">
+				<div className="text-center max-w-md px-6">
+					<p className="text-red-400 mb-2 text-lg">Unable to get your location</p>
+					<p className="text-gray-400 text-sm mb-4">
+						{locationError || "Location is required"}
+					</p>
+					<p className="text-gray-500 text-sm">
+						We need your location to better tune your experience and show you
+						Spätis near you. Please enable location access in your browser
+						settings.
+					</p>
+				</div>
+			</div>
+		);
+	}
 
 	if (spatiesQuery.isPending) {
 		return <Loading />;
@@ -158,24 +188,10 @@ function App() {
 				</p>
 				{/* Location Status */}
 				<div className="mt-3 text-xs">
-					{locationLoading && (
-						<span className="text-gray-500">📍 Getting your location...</span>
-					)}
-					{locationError && (
-						<button
-							type="button"
-							onClick={requestLocation}
-							className="text-red-400 hover:text-red-300"
-						>
-							📍 {locationError} - Click to retry
-						</button>
-					)}
-					{userLocation && (
-						<span className="text-green-500">
-							📍 Location: {userLocation.latitude.toFixed(4)},{" "}
-							{userLocation.longitude.toFixed(4)}
-						</span>
-					)}
+					<span className="text-green-500">
+						📍 Location: {userLocation.latitude.toFixed(4)},{" "}
+						{userLocation.longitude.toFixed(4)}
+					</span>
 				</div>
 			</header>
 
