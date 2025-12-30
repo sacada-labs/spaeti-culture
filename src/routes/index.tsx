@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
-import { MapPin, ChevronDown } from "lucide-react";
+import { ChevronDown, MapPin } from "lucide-react";
+import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/")({ component: App });
 
@@ -160,6 +160,37 @@ type FilterState = {
 	neighborhood: string | null;
 	status: string | null;
 };
+
+const FilterButton = ({
+	label,
+	count,
+	isSelected,
+	onClick,
+}: {
+	label: string;
+	count: number;
+	isSelected: boolean;
+	onClick: () => void;
+}) => (
+	<button
+		type="button"
+		onClick={onClick}
+		className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
+			isSelected
+				? "bg-green-500 text-white"
+				: "bg-gray-800 text-white hover:bg-gray-700"
+		}`}
+	>
+		<span>{label}</span>
+		<span
+			className={`px-2 py-0.5 rounded-full text-xs ${
+				isSelected ? "bg-green-600 text-white" : "bg-gray-700 text-gray-300"
+			}`}
+		>
+			{count}
+		</span>
+	</button>
+);
 
 function App() {
 	const [showFilters, setShowFilters] = useState(false);
@@ -335,36 +366,6 @@ function App() {
 		}));
 	};
 
-	const FilterButton = ({
-		label,
-		count,
-		isSelected,
-		onClick,
-	}: {
-		label: string;
-		count: number;
-		isSelected: boolean;
-		onClick: () => void;
-	}) => (
-		<button
-			onClick={onClick}
-			className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
-				isSelected
-					? "bg-green-500 text-white"
-					: "bg-gray-800 text-white hover:bg-gray-700"
-			}`}
-		>
-			<span>{label}</span>
-			<span
-				className={`px-2 py-0.5 rounded-full text-xs ${
-					isSelected ? "bg-green-600 text-white" : "bg-gray-700 text-gray-300"
-				}`}
-			>
-				{count}
-			</span>
-		</button>
-	);
-
 	return (
 		<div className="min-h-screen bg-black text-white">
 			{/* Header */}
@@ -384,6 +385,7 @@ function App() {
 			<main className="px-6 pb-20 max-w-7xl mx-auto">
 				{/* Toggle Filters Button */}
 				<button
+					type="button"
 					onClick={() => setShowFilters(!showFilters)}
 					className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors mb-6"
 				>
