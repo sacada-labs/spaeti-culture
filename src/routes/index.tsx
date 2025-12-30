@@ -13,33 +13,6 @@ const fetchSpatis = createServerFn({
 	return records;
 });
 
-type TransformedSpati = {
-	id: number;
-	name: string;
-	description: string | null;
-	address: string;
-	neighborhood: string;
-	seating: "INDOOR" | "OUTDOOR" | "BOTH" | "UNKNOWN";
-	hasToilet: boolean;
-	priceLevel: "$ CHEAP" | "$$ AVERAGE" | "$$$ EXPENSIVE";
-	payment: "CARD" | "CASH ONLY";
-};
-
-function transformSpati(spati: typeof spatis.$inferSelect): TransformedSpati {
-	return {
-		...spati,
-		seating: spati.seating ?? "UNKNOWN",
-		priceLevel:
-			spati.priceLevel === "$"
-				? "$ CHEAP"
-				: spati.priceLevel === "$$"
-					? "$$ AVERAGE"
-					: "$$$ EXPENSIVE",
-		payment: spati.payment === "CASH_ONLY" ? "CASH ONLY" : "CARD",
-		hasToilet: spati.hasToilet === "YES",
-	};
-}
-
 function Loading() {
 	return (
 		<div className="min-h-screen bg-black text-white">
@@ -80,9 +53,8 @@ function Loading() {
 }
 
 function App() {
-
 	const fetchSpatisFn = useServerFn(fetchSpatis);
-	
+
 	const spatiesQuery = useQuery({
 		queryKey: ["spaties"],
 		queryFn: () => fetchSpatisFn(),
@@ -95,7 +67,7 @@ function App() {
 		return <div>Error: {spatiesQuery.error.message}</div>;
 	}
 
-	const spaties = spatiesQuery.data.map(transformSpati);
+	const spaties = spatiesQuery.data;
 
 	return (
 		<div className="min-h-screen bg-black text-white">

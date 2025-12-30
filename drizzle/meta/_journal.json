@@ -15,6 +15,13 @@
       "when": 1767110153499,
       "tag": "0001_giant_hawkeye",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1767122726371,
+      "tag": "0002_numerous_hardball",
+      "breakpoints": true
     }
   ]
 }

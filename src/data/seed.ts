@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
-import { db, spatis } from "../db/index.ts";
+import { db } from "../db/index.ts";
+import { spatis } from "../db/schema.ts";
 
 // Berlin boundaries (approximate)
 const BERLIN_LAT_MIN = 52.3383;

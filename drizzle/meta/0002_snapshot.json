@@ -1,0 +1,155 @@
+{
+  "id": "f1ba6ac1-7f6a-4e3d-89af-2a6b26a13e69",
+  "prevId": "72b1ef08-b6e9-41d0-a6bb-812e3005997e",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.spatis": {
+      "name": "spatis",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "neighborhood": {
+          "name": "neighborhood",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "zipCode": {
+          "name": "zipCode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "location": {
+          "name": "location",
+          "type": "geometry(point)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "seating": {
+          "name": "seating",
+          "type": "seating",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'UNKNOWN'"
+        },
+        "has_toilet": {
+          "name": "has_toilet",
+          "type": "has_toilet",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'UNKNOWN'"
+        },
+        "price_level": {
+          "name": "price_level",
+          "type": "price_level",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payment": {
+          "name": "payment",
+          "type": "payment",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.has_toilet": {
+      "name": "has_toilet",
+      "schema": "public",
+      "values": [
+        "YES",
+        "NO",
+        "UNKNOWN"
+      ]
+    },
+    "public.payment": {
+      "name": "payment",
+      "schema": "public",
+      "values": [
+        "CARD",
+        "CASH_ONLY"
+      ]
+    },
+    "public.price_level": {
+      "name": "price_level",
+      "schema": "public",
+      "values": [
+        "$$$",
+        "$$",
+        "$"
+      ]
+    },
+    "public.seating": {
+      "name": "seating",
+      "schema": "public",
+      "values": [
+        "INDOOR",
+        "OUTDOOR",
+        "BOTH",
+        "UNKNOWN"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
