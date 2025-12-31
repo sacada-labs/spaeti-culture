@@ -6,7 +6,7 @@ export function Loading() {
 				<div className="flex items-center gap-3 mb-2">
 					<span className="text-2xl">🍺</span>
 					<h1 className="text-3xl font-bold tracking-tight text-green-500 uppercase">
-						SIT-IN SPAETI
+						SPATI CULTURE
 					</h1>
 				</div>
 				<p className="text-gray-400 text-sm">

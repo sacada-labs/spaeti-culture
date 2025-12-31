@@ -24,7 +24,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "Sit-in Späti | Berlin's Best Late-Night Spots with Seating",
+				title: "Späti Culture | Berlin's Best Late-Night Spots with Seating",
 			},
 			{
 				name: "description",

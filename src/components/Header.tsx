@@ -17,7 +17,7 @@ export function Header() {
 								<Beer className="text-black" size={28} />
 							</div>
 							<h1 className="text-3xl sm:text-4xl md:text-5xl font-display tracking-tight text-white uppercase">
-								Sit-in <span className="text-green-500">Späti</span>
+								Späti <span className="text-green-500">Culture</span>
 							</h1>
 						</Link>
 						<p className="text-gray-500 font-medium tracking-wide uppercase text-[10px] sm:text-xs md:text-sm max-w-md">
