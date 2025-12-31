@@ -25,11 +25,11 @@ code {
 /* Toast animation */
 @keyframes toast-in {
   from {
-    transform: translateX(-50%) translateY(100%);
+    transform: translateX(-50%) translateY(100%) scale(0.9);
     opacity: 0;
   }
   to {
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(-50%) translateY(0) scale(1);
     opacity: 1;
   }
 }
@@ -37,6 +37,34 @@ code {
 .toast-enter {
   animation: toast-in 0.3s ease-out forwards;
 }
+
+/* Card entry animation */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.spati-card {
+  animation: card-in 0.5s ease-out forwards;
+}
+
+/* Staggered delay for up to 12 cards */
+.spati-card:nth-child(1) { animation-delay: 0.05s; }
+.spati-card:nth-child(2) { animation-delay: 0.1s; }
+.spati-card:nth-child(3) { animation-delay: 0.15s; }
+.spati-card:nth-child(4) { animation-delay: 0.2s; }
+.spati-card:nth-child(5) { animation-delay: 0.25s; }
+.spati-card:nth-child(6) { animation-delay: 0.3s; }
+.spati-card:nth-child(7) { animation-delay: 0.35s; }
+.spati-card:nth-child(8) { animation-delay: 0.4s; }
+.spati-card:nth-child(9) { animation-delay: 0.45s; }
+.spati-card:nth-child(10) { animation-delay: 0.5s; }
 
 /* Custom select dropdown arrow */
 select.custom-select {

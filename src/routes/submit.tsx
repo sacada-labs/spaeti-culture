@@ -33,25 +33,36 @@ function Toast({
 		<div
 			role="alert"
 			aria-live="polite"
-			className={`toast-enter fixed bottom-24 left-1/2 z-50 flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl border ${
+			className={`toast-enter fixed bottom-28 left-1/2 z-50 flex items-center gap-4 px-6 py-4 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] border-2 ${
 				type === "success"
-					? "bg-green-500/10 border-green-500/30 text-green-400"
-					: "bg-red-500/10 border-red-500/30 text-red-400"
+					? "bg-gray-950 border-green-500 text-green-400"
+					: "bg-gray-950 border-red-500 text-red-400"
 			}`}
 		>
-			{type === "success" ? (
-				<CheckCircle size={20} />
-			) : (
-				<AlertCircle size={20} />
-			)}
-			<span className="text-sm font-medium">{message}</span>
+			<div
+				className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+					type === "success" ? "bg-green-500/20" : "bg-red-500/20"
+				}`}
+			>
+				{type === "success" ? (
+					<CheckCircle size={24} />
+				) : (
+					<AlertCircle size={24} />
+				)}
+			</div>
+			<div className="flex flex-col">
+				<span className="text-xs font-black uppercase tracking-widest opacity-50">
+					{type === "success" ? "Success" : "Error"}
+				</span>
+				<span className="text-sm font-bold text-white">{message}</span>
+			</div>
 			<button
 				type="button"
 				onClick={onClose}
-				className="ml-2 p-1 hover:bg-white/10 rounded transition-colors"
+				className="ml-4 p-2 hover:bg-white/10 rounded-xl transition-all hover:scale-110 active:scale-95"
 				aria-label="Dismiss notification"
 			>
-				<X size={14} />
+				<X size={18} className="text-gray-500 hover:text-white" />
 			</button>
 		</div>
 	);
@@ -96,6 +107,7 @@ function SubmitPage() {
 		priceLevel: "$$",
 		payment: "CASH_ONLY",
 	});
+	const [formError, setFormError] = useState<string | null>(null);
 
 	const mutation = useMutation({
 		mutationFn: async (data: SubmissionForm) => {
@@ -118,11 +130,18 @@ function SubmitPage() {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+		const result = submitSubmissionSchema.safeParse(formData);
+		if (!result.success) {
+			setFormError(result.error.issues[0].message);
+			return;
+		}
+		setFormError(null);
 		mutation.mutate(formData);
 	};
 
 	const updateGoogleMapsUrl = (value: string) => {
 		setFormData((prev) => ({ ...prev, googleMapsUrl: value }));
+		if (formError) setFormError(null);
 	};
 
 	const updateSeating = (value: SubmissionForm["seating"]) => {
@@ -162,12 +181,12 @@ function SubmitPage() {
 						<div>
 							<label
 								htmlFor={googleMapsId}
-								className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2"
+								className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2"
 							>
 								Google Maps URL
 							</label>
 							<div className="relative">
-								<div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+								<div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
 									<Globe size={16} />
 								</div>
 								<input
@@ -178,16 +197,27 @@ function SubmitPage() {
 									value={formData.googleMapsUrl}
 									onChange={(e) => updateGoogleMapsUrl(e.target.value)}
 									placeholder="https://maps.app.goo.gl/..."
-									className="w-full bg-black border border-gray-800 rounded-xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors"
+									className={`w-full bg-black border ${
+										formError ? "border-red-500" : "border-gray-800"
+									} rounded-xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors`}
 								/>
 							</div>
+							{formError ? (
+								<p className="mt-2 text-red-500 text-[10px] font-bold uppercase tracking-wider">
+									{formError}
+								</p>
+							) : (
+								<p className="mt-2 text-gray-500 text-[10px] uppercase tracking-wider">
+									Paste the link from the "Share" button in Google Maps.
+								</p>
+							)}
 						</div>
 
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							<div>
 								<label
 									htmlFor={seatingId}
-									className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2"
+									className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2"
 								>
 									Seating
 								</label>
@@ -199,7 +229,7 @@ function SubmitPage() {
 									onChange={(e) =>
 										updateSeating(e.target.value as SubmissionForm["seating"])
 									}
-									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer"
+									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer text-gray-300"
 								>
 									<option value="NO">No</option>
 									<option value="YES">Yes</option>
@@ -208,7 +238,7 @@ function SubmitPage() {
 							<div>
 								<label
 									htmlFor={toiletId}
-									className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2"
+									className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2"
 								>
 									Toilet
 								</label>
@@ -222,7 +252,7 @@ function SubmitPage() {
 											e.target.value as SubmissionForm["hasToilet"],
 										)
 									}
-									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer"
+									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer text-gray-300"
 								>
 									<option value="NO">No</option>
 									<option value="YES">Yes</option>
@@ -232,7 +262,7 @@ function SubmitPage() {
 
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							<fieldset>
-								<legend className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2">
+								<legend className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
 									Price Level
 								</legend>
 								<div className="flex gap-2 bg-black p-1.5 border border-gray-800 rounded-xl">
@@ -244,7 +274,7 @@ function SubmitPage() {
 											className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
 												formData.priceLevel === level
 													? "bg-green-500 text-black"
-													: "text-gray-500 hover:text-white"
+													: "text-gray-400 hover:text-white"
 											}`}
 										>
 											{level}
@@ -253,7 +283,7 @@ function SubmitPage() {
 								</div>
 							</fieldset>
 							<fieldset>
-								<legend className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2">
+								<legend className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
 									Payment
 								</legend>
 								<div className="flex gap-2 bg-black p-1.5 border border-gray-800 rounded-xl">
@@ -270,7 +300,7 @@ function SubmitPage() {
 											className={`flex-1 py-2 rounded-lg text-[10px] uppercase font-bold transition-all ${
 												formData.payment === opt.id
 													? "bg-purple-500 text-white"
-													: "text-gray-500 hover:text-white"
+													: "text-gray-400 hover:text-white"
 											}`}
 										>
 											{opt.label}

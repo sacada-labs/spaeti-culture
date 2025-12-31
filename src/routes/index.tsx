@@ -266,21 +266,21 @@ function App() {
 							type="button"
 							aria-pressed={hasSittingFilter}
 							onClick={() => setHasSittingFilter(!hasSittingFilter)}
-							className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+							className={`min-h-[44px] min-w-[120px] justify-center px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
 								hasSittingFilter
 									? "bg-green-500 text-black"
 									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
 							}`}
 						>
 							<Armchair size={16} />
-							<span className="hidden sm:inline">Has</span> Sitting
+							<span>Sitting</span>
 						</button>
 
 						<button
 							type="button"
 							aria-pressed={hasToiletFilter}
 							onClick={() => setHasToiletFilter(!hasToiletFilter)}
-							className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+							className={`min-h-[44px] min-w-[120px] justify-center px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
 								hasToiletFilter
 									? "bg-green-500 text-black"
 									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
@@ -294,7 +294,7 @@ function App() {
 							type="button"
 							aria-pressed={acceptsCardFilter}
 							onClick={() => setAcceptsCardFilter(!acceptsCardFilter)}
-							className={`min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+							className={`min-h-[44px] min-w-[120px] justify-center px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
 								acceptsCardFilter
 									? "bg-green-500 text-black"
 									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
@@ -308,7 +308,7 @@ function App() {
 
 						<fieldset
 							aria-label="Price level filter"
-							className="flex items-center gap-1 bg-gray-900 p-1.5 rounded-xl border-0 p-0 m-0"
+							className="flex items-center gap-1 bg-gray-900 p-1 rounded-xl border-0 m-0 h-[44px]"
 						>
 							{(
 								[
@@ -327,10 +327,10 @@ function App() {
 											priceLevelFilter === value ? undefined : value,
 										)
 									}
-									className={`min-w-[44px] min-h-[36px] px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+									className={`min-w-[40px] h-[36px] px-2 rounded-lg text-xs font-bold transition-all ${
 										priceLevelFilter === value
-											? "bg-white text-black"
-											: "text-gray-500 hover:text-white"
+											? "bg-green-500 text-black"
+											: "text-gray-400 hover:text-white"
 									}`}
 								>
 									{value}
@@ -350,7 +350,7 @@ function App() {
 									setAcceptsCardFilter(false);
 									setPriceLevelFilter(undefined);
 								}}
-								className="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 text-gray-500 hover:text-red-400 transition-colors flex items-center justify-center"
+								className="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 text-gray-400 hover:text-red-400 transition-colors flex items-center justify-center"
 								aria-label="Clear all filters"
 							>
 								<Trash2 size={18} />
@@ -377,18 +377,35 @@ function App() {
 					</div>
 				) : spatiesQuery.data?.length === 0 ? (
 					<div className="bg-gray-900/50 border border-gray-800 p-12 rounded-2xl text-center">
-						<Search size={48} className="mx-auto text-gray-700 mb-4" />
+						<Search size={48} className="mx-auto text-gray-700 mb-6" />
 						<h3 className="text-xl font-bold mb-2">No Spätis found</h3>
-						<p className="text-gray-500 max-w-xs mx-auto">
+						<p className="text-gray-400 max-w-xs mx-auto mb-8">
 							Try adjusting your filters or search area to find more results.
 						</p>
+						{(hasSittingFilter ||
+							hasToiletFilter ||
+							acceptsCardFilter ||
+							priceLevelFilter) && (
+							<button
+								type="button"
+								onClick={() => {
+									setHasSittingFilter(false);
+									setHasToiletFilter(false);
+									setAcceptsCardFilter(false);
+									setPriceLevelFilter(undefined);
+								}}
+								className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px]"
+							>
+								Clear All Filters
+							</button>
+						)}
 					</div>
 				) : (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 						{spatiesQuery.data.map((spati) => (
 							<div
 								key={spati.id}
-								className="group bg-gray-900/40 border border-gray-800 rounded-2xl p-6 hover:border-green-500/50 transition-all hover:shadow-2xl hover:shadow-green-500/5 flex flex-col"
+								className="group bg-gray-900/40 border border-gray-800 rounded-2xl p-6 hover:border-green-500/50 transition-all hover:shadow-2xl hover:shadow-green-500/5 flex flex-col spati-card opacity-0"
 							>
 								<div className="flex justify-between items-start mb-4">
 									<h2 className="text-xl font-bold group-hover:text-green-500 transition-colors">
@@ -413,7 +430,7 @@ function App() {
 								<div className="flex items-start gap-2 mb-4">
 									<MapPin
 										size={14}
-										className="text-gray-500 mt-1 flex-shrink-0"
+										className="text-gray-400 mt-1 flex-shrink-0"
 									/>
 									<div className="flex-1">
 										<p className="text-gray-400 text-sm leading-snug">

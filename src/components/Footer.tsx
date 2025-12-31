@@ -5,8 +5,8 @@ export function Footer() {
 				aria-label="Footer navigation"
 				className="max-w-7xl mx-auto flex justify-center items-center"
 			>
-				<p className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 flex items-center gap-2">
-					© 2025 Sacada Labs <span className="text-gray-800">•</span> Berlin{" "}
+				<p className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-500 flex items-center gap-2">
+					© 2025 Sacada Labs <span className="text-gray-700">•</span> Berlin{" "}
 					<span>🥨</span>
 				</p>
 			</nav>

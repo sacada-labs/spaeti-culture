@@ -40,9 +40,12 @@ export function Header() {
 					{userLocation && (
 						<div className="flex items-center gap-2 px-4 py-2 bg-gray-900/50 border border-gray-800 rounded-full text-[10px] md:text-xs text-green-500 font-mono">
 							<MapPin size={12} className="animate-pulse" />
-							<span>
+							<span className="hidden sm:inline">
 								{userLocation.latitude.toFixed(4)},{" "}
 								{userLocation.longitude.toFixed(4)}
+							</span>
+							<span className="sm:hidden uppercase tracking-widest font-bold">
+								Location Detected
 							</span>
 						</div>
 					)}
@@ -77,7 +80,7 @@ export function Header() {
 
 			{/* Mobile Menu Overlay */}
 			{isMenuOpen && (
-				<div className="fixed inset-0 bg-black/95 backdrop-blur-xl z-[60] md:hidden flex flex-col items-center justify-center gap-8">
+				<div className="fixed inset-0 bg-black/95 backdrop-blur-xl z-[60] md:hidden flex flex-col items-center justify-center gap-8 animate-in fade-in duration-300">
 					<button
 						type="button"
 						onClick={() => setIsMenuOpen(false)}
