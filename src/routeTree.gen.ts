@@ -13,8 +13,6 @@ import { Route as SubmitRouteImport } from './routes/submit'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
-import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc.$'
-import { Route as ApiDocsSplatRouteImport } from './routes/api/docs.$'
 
 const SubmitRoute = SubmitRouteImport.update({
   id: '/submit',
@@ -36,32 +34,18 @@ const ApiHealthRoute = ApiHealthRouteImport.update({
   path: '/api/health',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
-  id: '/api/rpc/$',
-  path: '/api/rpc/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiDocsSplatRoute = ApiDocsSplatRouteImport.update({
-  id: '/api/docs/$',
-  path: '/api/docs/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/submit': typeof SubmitRoute
   '/api/health': typeof ApiHealthRoute
-  '/api/docs/$': typeof ApiDocsSplatRoute
-  '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/submit': typeof SubmitRoute
   '/api/health': typeof ApiHealthRoute
-  '/api/docs/$': typeof ApiDocsSplatRoute
-  '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,28 +53,13 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/submit': typeof SubmitRoute
   '/api/health': typeof ApiHealthRoute
-  '/api/docs/$': typeof ApiDocsSplatRoute
-  '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/about'
-    | '/submit'
-    | '/api/health'
-    | '/api/docs/$'
-    | '/api/rpc/$'
+  fullPaths: '/' | '/about' | '/submit' | '/api/health'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/submit' | '/api/health' | '/api/docs/$' | '/api/rpc/$'
-  id:
-    | '__root__'
-    | '/'
-    | '/about'
-    | '/submit'
-    | '/api/health'
-    | '/api/docs/$'
-    | '/api/rpc/$'
+  to: '/' | '/about' | '/submit' | '/api/health'
+  id: '__root__' | '/' | '/about' | '/submit' | '/api/health'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -98,8 +67,6 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   SubmitRoute: typeof SubmitRoute
   ApiHealthRoute: typeof ApiHealthRoute
-  ApiDocsSplatRoute: typeof ApiDocsSplatRoute
-  ApiRpcSplatRoute: typeof ApiRpcSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -132,20 +99,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/rpc/$': {
-      id: '/api/rpc/$'
-      path: '/api/rpc/$'
-      fullPath: '/api/rpc/$'
-      preLoaderRoute: typeof ApiRpcSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/docs/$': {
-      id: '/api/docs/$'
-      path: '/api/docs/$'
-      fullPath: '/api/docs/$'
-      preLoaderRoute: typeof ApiDocsSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -154,8 +107,6 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   SubmitRoute: SubmitRoute,
   ApiHealthRoute: ApiHealthRoute,
-  ApiDocsSplatRoute: ApiDocsSplatRoute,
-  ApiRpcSplatRoute: ApiRpcSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
