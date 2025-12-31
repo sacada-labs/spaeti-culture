@@ -15,6 +15,19 @@ const handler = new OpenAPIHandler(router, {
 					version: "1.0.0",
 					description: "API for managing Berlin Spätis (convenience stores)",
 				},
+				servers: [
+					{
+						url:
+							process.env.API_BASE_URL ||
+							(process.env.NODE_ENV === "production"
+								? "https://spaeti-advisor.sacadalabs.com"
+								: "http://localhost:3000"),
+						description:
+							process.env.NODE_ENV === "production"
+								? "Production server"
+								: "Development server",
+					},
+				],
 				components: {
 					securitySchemes: {
 						BasicAuth: {
