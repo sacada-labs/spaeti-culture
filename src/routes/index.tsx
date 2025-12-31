@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
-import { and, eq, ne, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import {
 	Armchair,
 	CreditCard,
@@ -11,15 +11,63 @@ import {
 	Toilet,
 	Trash2,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { db } from "../db";
 import { spatis } from "../db/schema";
-import { useGeolocation } from "../hooks/useGeolocation";
 
 export const Route = createFileRoute("/")({ component: App });
+
+type UserLocation = {
+	latitude: number;
+	longitude: number;
+} | null;
+
+function useGeolocation() {
+	const [location, setLocation] = useState<UserLocation>(() => {
+		// Lazy initialization - request immediately
+		if (typeof window !== "undefined" && navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(
+				(position) => {
+					setLocation({
+						latitude: position.coords.latitude,
+						longitude: position.coords.longitude,
+					});
+				},
+				(err) => {
+					setError(err.message);
+				},
+				{
+					enableHighAccuracy: true,
+					timeout: 10000,
+					maximumAge: 300000, // 5 minutes cache
+				},
+			);
+		} else if (typeof window !== "undefined") {
+			setError("Geolocation is not supported by your browser");
+		}
+		return null;
+	});
+	const [error, setError] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+	const [bypassed, setBypassed] = useState(false);
+
+	// Update loading state when location or error changes
+	useEffect(() => {
+		if (location !== null || error !== null) {
+			setIsLoading(false);
+		}
+	}, [location, error]);
+
+	const bypassError = () => {
+		setBypassed(true);
+		setIsLoading(false);
+	};
+
+	return { location, error: bypassed ? null : error, isLoading, bypassError };
+}
 
 function formatDistance(meters: number | undefined): string | null {
 	if (meters === undefined || meters === null) {
@@ -69,7 +117,7 @@ const fetchSpatis = createServerFn()
 		}
 
 		if (hasSitting !== undefined) {
-			conditions.push(ne(spatis.seating, "UNKNOWN"));
+			conditions.push(eq(spatis.seating, "YES"));
 		}
 
 		// Build base query
@@ -87,7 +135,6 @@ const fetchSpatis = createServerFn()
 				.select({
 					id: spatis.id,
 					name: spatis.name,
-					description: spatis.description,
 					address: spatis.address,
 					neighborhood: spatis.neighborhood,
 					zipCode: spatis.zipCode,
@@ -158,59 +205,51 @@ function App() {
 
 	if (locationLoading) {
 		return (
-			<div className="min-h-screen bg-black text-white flex flex-col">
-				<Header />
-				<div className="flex-1 flex items-center justify-center">
-					<div className="text-center max-w-md px-6">
-						<div className="w-16 h-16 border-4 border-gray-800 border-t-green-500 rounded-full animate-spin mx-auto mb-6" />
-						<h2 className="text-xl font-bold mb-2 uppercase tracking-tight">
-							Locating...
-						</h2>
-						<p className="text-gray-400 text-sm">
-							We need your location to show you the best Spätis nearby.
-						</p>
-					</div>
+			<div className="min-h-screen bg-black text-white flex items-center justify-center">
+				<div className="text-center max-w-md px-6">
+					<div className="w-16 h-16 border-4 border-gray-800 border-t-green-500 rounded-full animate-spin mx-auto mb-6"></div>
+					<h2 className="text-xl font-bold mb-2 uppercase tracking-tight">
+						Locating...
+					</h2>
+					<p className="text-gray-400 text-sm">
+						We need your location to show you the best Spätis nearby.
+					</p>
 				</div>
-				<Footer />
 			</div>
 		);
 	}
 
 	if (locationError) {
 		return (
-			<div className="min-h-screen bg-black text-white flex flex-col">
-				<Header />
-				<div className="flex-1 flex items-center justify-center">
-					<div className="text-center max-w-md px-6 border border-amber-500/20 bg-amber-500/5 p-8 rounded-2xl">
-						<div className="w-16 h-16 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
-							<Navigation size={32} />
-						</div>
-						<h2 className="text-xl font-bold mb-2 uppercase tracking-tight text-amber-400">
-							Location Unavailable
-						</h2>
-						<p className="text-gray-400 text-sm mb-6">
-							{locationError}. You can still browse all Spätis, but they won't
-							be sorted by distance.
-						</p>
-						<div className="flex flex-col sm:flex-row gap-3 justify-center">
-							<button
-								type="button"
-								onClick={() => window.location.reload()}
-								className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px]"
-							>
-								Try Again
-							</button>
-							<button
-								type="button"
-								onClick={bypassError}
-								className="px-6 py-3 bg-green-500 text-black font-bold rounded-full hover:bg-green-400 transition-colors min-h-[48px]"
-							>
-								Browse Anyway
-							</button>
-						</div>
+			<div className="min-h-screen bg-black text-white flex items-center justify-center">
+				<div className="text-center max-w-md px-6 border border-amber-500/20 bg-amber-500/5 p-8 rounded-2xl">
+					<div className="w-16 h-16 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
+						<Navigation size={32} />
+					</div>
+					<h2 className="text-xl font-bold mb-2 uppercase tracking-tight text-amber-400">
+						Location Unavailable
+					</h2>
+					<p className="text-gray-400 text-sm mb-6">
+						{locationError}. You can still browse all Spätis, but they won't be
+						sorted by distance.
+					</p>
+					<div className="flex flex-col sm:flex-row gap-3 justify-center">
+						<button
+							type="button"
+							onClick={() => window.location.reload()}
+							className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px]"
+						>
+							Try Again
+						</button>
+						<button
+							type="button"
+							onClick={bypassError}
+							className="px-6 py-3 bg-green-500 text-black font-bold rounded-full hover:bg-green-400 transition-colors min-h-[48px]"
+						>
+							Browse Anyway
+						</button>
 					</div>
 				</div>
-				<Footer />
 			</div>
 		);
 	}
@@ -394,23 +433,13 @@ function App() {
 									</div>
 								</div>
 
-								{spati.description && (
-									<p className="text-gray-500 text-sm mb-6 line-clamp-2">
-										{spati.description}
-									</p>
-								)}
-
 								<div className="mt-auto pt-6 border-t border-gray-800/50 flex flex-wrap gap-2">
-									<div
-										className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${
-											spati.seating !== "UNKNOWN"
-												? "bg-green-500/10 text-green-500 border border-green-500/20"
-												: "bg-gray-800 text-gray-500"
-										}`}
-									>
-										<Armchair size={10} />
-										{spati.seating}
-									</div>
+									{spati.seating === "YES" && (
+										<div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-green-500/10 text-green-500 border border-green-500/20">
+											<Armchair size={10} />
+											Seating
+										</div>
+									)}
 
 									{spati.hasToilet === "YES" && (
 										<div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">

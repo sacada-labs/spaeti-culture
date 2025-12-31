@@ -70,8 +70,8 @@ const streetNames = [
 	"Friedrichstraße",
 ];
 
-const seatingOptions = ["INDOOR", "OUTDOOR", "BOTH", "UNKNOWN"] as const;
-const hasToiletOptions = ["YES", "NO", "UNKNOWN"] as const;
+const seatingOptions = ["YES", "NO"] as const;
+const hasToiletOptions = ["YES", "NO"] as const;
 const priceLevelOptions = ["$$$", "$$", "$"] as const;
 const paymentOptions = ["CARD", "CASH_ONLY"] as const;
 

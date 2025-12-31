@@ -91,8 +91,8 @@ function SubmitPage() {
 
 	const [formData, setFormData] = useState<SubmissionForm>({
 		googleMapsUrl: "",
-		seating: "UNKNOWN",
-		hasToilet: "UNKNOWN",
+		seating: "NO",
+		hasToilet: "NO",
 		priceLevel: "$$",
 		payment: "CASH_ONLY",
 	});
@@ -201,10 +201,8 @@ function SubmitPage() {
 									}
 									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer"
 								>
-									<option value="UNKNOWN">Unknown</option>
-									<option value="INDOOR">Indoor</option>
-									<option value="OUTDOOR">Outdoor</option>
-									<option value="BOTH">Both</option>
+									<option value="NO">No</option>
+									<option value="YES">Yes</option>
 								</select>
 							</div>
 							<div>
@@ -226,9 +224,8 @@ function SubmitPage() {
 									}
 									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer"
 								>
-									<option value="UNKNOWN">Unknown</option>
-									<option value="YES">Yes</option>
 									<option value="NO">No</option>
+									<option value="YES">Yes</option>
 								</select>
 							</div>
 						</div>
