@@ -205,13 +205,13 @@ function App() {
 
 	if (locationLoading) {
 		return (
-			<div className="min-h-screen bg-black text-white flex items-center justify-center">
-				<div className="text-center max-w-md px-6">
+			<div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
+				<div className="text-center max-w-md w-full">
 					<div className="w-16 h-16 border-4 border-gray-800 border-t-green-500 rounded-full animate-spin mx-auto mb-6"></div>
-					<h2 className="text-xl font-bold mb-2 uppercase tracking-tight">
+					<h2 className="text-lg sm:text-xl font-bold mb-2 uppercase tracking-tight">
 						Locating...
 					</h2>
-					<p className="text-gray-400 text-sm">
+					<p className="text-gray-400 text-sm sm:text-base px-4">
 						We need your location to show you the best Spätis nearby.
 					</p>
 				</div>
@@ -221,15 +221,15 @@ function App() {
 
 	if (locationError) {
 		return (
-			<div className="min-h-screen bg-black text-white flex items-center justify-center">
-				<div className="text-center max-w-md px-6 border border-amber-500/20 bg-amber-500/5 p-8 rounded-2xl">
+			<div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
+				<div className="text-center max-w-md w-full border border-amber-500/20 bg-amber-500/5 p-6 sm:p-8 rounded-2xl">
 					<div className="w-16 h-16 bg-amber-500/10 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
 						<Navigation size={32} />
 					</div>
-					<h2 className="text-xl font-bold mb-2 uppercase tracking-tight text-amber-400">
+					<h2 className="text-lg sm:text-xl font-bold mb-2 uppercase tracking-tight text-amber-400">
 						Location Unavailable
 					</h2>
-					<p className="text-gray-400 text-sm mb-6">
+					<p className="text-gray-400 text-sm sm:text-base mb-6">
 						{locationError}. You can still browse all Spätis, but they won't be
 						sorted by distance.
 					</p>
@@ -237,14 +237,14 @@ function App() {
 						<button
 							type="button"
 							onClick={() => window.location.reload()}
-							className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px]"
+							className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px] touch-manipulation"
 						>
 							Try Again
 						</button>
 						<button
 							type="button"
 							onClick={bypassError}
-							className="px-6 py-3 bg-green-500 text-black font-bold rounded-full hover:bg-green-400 transition-colors min-h-[48px]"
+							className="px-6 py-3 bg-green-500 text-black font-bold rounded-full hover:bg-green-400 transition-colors min-h-[48px] touch-manipulation"
 						>
 							Browse Anyway
 						</button>
@@ -258,57 +258,57 @@ function App() {
 		<div className="min-h-screen bg-black text-white selection:bg-green-500 selection:text-black">
 			<Header />
 
-			<main className="px-6 pb-32 max-w-7xl mx-auto">
+			<main className="px-4 sm:px-6 pb-32 max-w-7xl mx-auto">
 				{/* Filters Section */}
-				<div className="mb-10 sticky top-4 z-10">
-					<div className="bg-black/80 backdrop-blur-xl border border-gray-800 p-2 rounded-2xl flex flex-wrap items-center gap-2 shadow-2xl">
+				<div className="mb-6 sm:mb-10 sticky top-2 sm:top-4 z-10 -mx-4 sm:mx-0 px-4 sm:px-0">
+					<div className="bg-black/80 backdrop-blur-xl border border-gray-800 p-2 sm:p-3 rounded-2xl flex flex-wrap items-center gap-2 sm:gap-3 shadow-2xl overflow-x-auto sm:overflow-x-visible">
 						<button
 							type="button"
 							aria-pressed={hasSittingFilter}
 							onClick={() => setHasSittingFilter(!hasSittingFilter)}
-							className={`min-h-[44px] min-w-[120px] justify-center px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 								hasSittingFilter
 									? "bg-green-500 text-black"
 									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
 							}`}
 						>
-							<Armchair size={16} />
-							<span>Sitting</span>
+							<Armchair size={16} className="flex-shrink-0" />
+							<span className="hidden sm:inline">Sitting</span>
 						</button>
 
 						<button
 							type="button"
 							aria-pressed={hasToiletFilter}
 							onClick={() => setHasToiletFilter(!hasToiletFilter)}
-							className={`min-h-[44px] min-w-[120px] justify-center px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 								hasToiletFilter
 									? "bg-green-500 text-black"
 									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
 							}`}
 						>
-							<Toilet size={16} />
-							Toilet
+							<Toilet size={16} className="flex-shrink-0" />
+							<span className="hidden sm:inline">Toilet</span>
 						</button>
 
 						<button
 							type="button"
 							aria-pressed={acceptsCardFilter}
 							onClick={() => setAcceptsCardFilter(!acceptsCardFilter)}
-							className={`min-h-[44px] min-w-[120px] justify-center px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 								acceptsCardFilter
 									? "bg-green-500 text-black"
 									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
 							}`}
 						>
-							<CreditCard size={16} />
-							Card
+							<CreditCard size={16} className="flex-shrink-0" />
+							<span className="hidden sm:inline">Card</span>
 						</button>
 
 						<div className="h-6 w-px bg-gray-800 mx-1 hidden sm:block" />
 
 						<fieldset
 							aria-label="Price level filter"
-							className="flex items-center gap-1 bg-gray-900 p-1 rounded-xl border-0 m-0 h-[44px]"
+							className="flex items-center gap-1.5 sm:gap-1 bg-gray-900 p-1 rounded-xl border-0 m-0 min-h-[44px]"
 						>
 							{(
 								[
@@ -327,7 +327,7 @@ function App() {
 											priceLevelFilter === value ? undefined : value,
 										)
 									}
-									className={`min-w-[40px] h-[36px] px-2 rounded-lg text-xs font-bold transition-all ${
+									className={`min-w-[44px] min-h-[36px] sm:min-h-[36px] px-2 sm:px-3 rounded-lg text-xs font-bold transition-all touch-manipulation ${
 										priceLevelFilter === value
 											? "bg-green-500 text-black"
 											: "text-gray-400 hover:text-white"
@@ -350,7 +350,7 @@ function App() {
 									setAcceptsCardFilter(false);
 									setPriceLevelFilter(undefined);
 								}}
-								className="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 text-gray-400 hover:text-red-400 transition-colors flex items-center justify-center"
+								className="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 text-gray-400 hover:text-red-400 transition-colors flex items-center justify-center touch-manipulation"
 								aria-label="Clear all filters"
 							>
 								<Trash2 size={18} />
@@ -361,7 +361,7 @@ function App() {
 
 				{/* Späti Grid */}
 				{spatiesQuery.isPending ? (
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 						{[1, 2, 3, 4, 5, 6].map((i) => (
 							<div
 								key={`skeleton-${i}`}
@@ -370,16 +370,18 @@ function App() {
 						))}
 					</div>
 				) : spatiesQuery.isError ? (
-					<div className="bg-red-500/10 border border-red-500/20 p-8 rounded-2xl text-center">
-						<p className="text-red-400">
+					<div className="bg-red-500/10 border border-red-500/20 p-6 sm:p-8 rounded-2xl text-center">
+						<p className="text-red-400 text-sm sm:text-base">
 							Failed to load Spätis: {spatiesQuery.error.message}
 						</p>
 					</div>
 				) : spatiesQuery.data?.length === 0 ? (
-					<div className="bg-gray-900/50 border border-gray-800 p-12 rounded-2xl text-center">
-						<Search size={48} className="mx-auto text-gray-700 mb-6" />
-						<h3 className="text-xl font-bold mb-2">No Spätis found</h3>
-						<p className="text-gray-400 max-w-xs mx-auto mb-8">
+					<div className="bg-gray-900/50 border border-gray-800 p-8 sm:p-12 rounded-2xl text-center">
+						<Search size={48} className="mx-auto text-gray-700 mb-4 sm:mb-6" />
+						<h3 className="text-lg sm:text-xl font-bold mb-2">
+							No Spätis found
+						</h3>
+						<p className="text-gray-400 text-sm sm:text-base max-w-xs mx-auto mb-6 sm:mb-8">
 							Try adjusting your filters or search area to find more results.
 						</p>
 						{(hasSittingFilter ||
@@ -394,21 +396,21 @@ function App() {
 									setAcceptsCardFilter(false);
 									setPriceLevelFilter(undefined);
 								}}
-								className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px]"
+								className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px] touch-manipulation"
 							>
 								Clear All Filters
 							</button>
 						)}
 					</div>
 				) : (
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 						{spatiesQuery.data.map((spati) => (
 							<div
 								key={spati.id}
-								className="group bg-gray-900/40 border border-gray-800 rounded-2xl p-6 hover:border-green-500/50 transition-all hover:shadow-2xl hover:shadow-green-500/5 flex flex-col spati-card opacity-0"
+								className="group bg-gray-900/40 border border-gray-800 rounded-2xl p-4 sm:p-6 hover:border-green-500/50 transition-all hover:shadow-2xl hover:shadow-green-500/5 flex flex-col spati-card opacity-0 min-h-[200px] sm:min-h-[240px]"
 							>
-								<div className="flex justify-between items-start mb-4">
-									<h2 className="text-xl font-bold group-hover:text-green-500 transition-colors">
+								<div className="flex justify-between items-start mb-3 sm:mb-4 gap-2">
+									<h2 className="text-lg sm:text-xl font-bold group-hover:text-green-500 transition-colors leading-tight">
 										{spati.name}
 									</h2>
 									<div className="flex gap-0.5">
@@ -427,13 +429,13 @@ function App() {
 									</div>
 								</div>
 
-								<div className="flex items-start gap-2 mb-4">
+								<div className="flex items-start gap-2 mb-3 sm:mb-4">
 									<MapPin
 										size={14}
-										className="text-gray-400 mt-1 flex-shrink-0"
+										className="text-gray-400 mt-0.5 sm:mt-1 flex-shrink-0"
 									/>
-									<div className="flex-1">
-										<p className="text-gray-400 text-sm leading-snug">
+									<div className="flex-1 min-w-0">
+										<p className="text-gray-400 text-xs sm:text-sm leading-relaxed break-words">
 											{spati.address}
 										</p>
 										{"distance" in spati &&
@@ -450,7 +452,7 @@ function App() {
 									</div>
 								</div>
 
-								<div className="mt-auto pt-6 border-t border-gray-800/50 flex flex-wrap gap-2">
+								<div className="mt-auto pt-4 sm:pt-6 border-t border-gray-800/50 flex flex-wrap gap-2">
 									{spati.seating === "YES" && (
 										<div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-green-500/10 text-green-500 border border-green-500/20">
 											<Armchair size={10} />

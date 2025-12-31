@@ -1,7 +1,22 @@
 @import "tailwindcss";
 
+/* Mobile-first base font size - prevents iOS zoom on input focus */
 html {
   scrollbar-gutter: stable;
+  font-size: 16px; /* Base 16px for mobile to prevent zoom */
+}
+
+/* Responsive typography scale */
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: 18px;
+  }
 }
 
 body {
@@ -11,10 +26,14 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 1rem; /* Use rem for base font size */
+  line-height: 1.5; /* Improved readability on mobile */
 }
 
 h1, h2, h3, .font-display {
   font-family: "Archivo Black", "Impact", sans-serif;
+  line-height: 1.2; /* Tighter line height for headings */
+  letter-spacing: -0.02em; /* Slightly tighter letter spacing */
 }
 
 code {
@@ -22,27 +41,28 @@ code {
     monospace;
 }
 
-/* Toast animation */
+/* Toast animation - optimized for mobile performance */
 @keyframes toast-in {
   from {
-    transform: translateX(-50%) translateY(100%) scale(0.9);
+    transform: scale(0.9);
     opacity: 0;
   }
   to {
-    transform: translateX(-50%) translateY(0) scale(1);
+    transform: scale(1);
     opacity: 1;
   }
 }
 
 .toast-enter {
   animation: toast-in 0.3s ease-out forwards;
+  will-change: transform, opacity; /* Performance optimization */
 }
 
-/* Card entry animation */
+/* Card entry animation - optimized for mobile */
 @keyframes card-in {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(1.25rem); /* Use rem instead of px */
   }
   to {
     opacity: 1;
@@ -52,6 +72,7 @@ code {
 
 .spati-card {
   animation: card-in 0.5s ease-out forwards;
+  will-change: transform, opacity; /* Performance optimization */
 }
 
 /* Staggered delay for up to 12 cards */
@@ -70,7 +91,55 @@ code {
 select.custom-select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 40px;
+  background-position: right 0.75rem center; /* Use rem */
+  padding-right: 2.5rem; /* Use rem */
+  font-size: 1rem; /* Ensure 16px minimum to prevent iOS zoom */
+}
+
+/* Touch manipulation utility - improves touch responsiveness */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Safe area insets for mobile devices (notch support) */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+  
+  header {
+    padding-top: max(0.625rem, env(safe-area-inset-top));
+  }
+  
+  footer {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Prevent horizontal scroll on mobile */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Improve text rendering on mobile */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Responsive image handling */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Improve focus visibility for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid theme(colors.green.500);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
 }
 

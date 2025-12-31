@@ -8,7 +8,7 @@ export function Header() {
 	const { location: userLocation } = useGeolocation();
 
 	return (
-		<header className="px-6 pt-10 pb-8 max-w-7xl mx-auto relative z-50">
+		<header className="px-4 sm:px-6 pt-6 sm:pt-10 pb-6 sm:pb-8 max-w-7xl mx-auto relative z-50">
 			<div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
 				<div className="flex justify-between items-start w-full md:w-auto">
 					<div>
@@ -29,8 +29,9 @@ export function Header() {
 					<button
 						type="button"
 						onClick={() => setIsMenuOpen(!isMenuOpen)}
-						className="md:hidden p-2 text-gray-400 hover:text-white transition-colors"
+						className="md:hidden min-w-[44px] min-h-[44px] p-3 text-gray-400 hover:text-white transition-colors flex items-center justify-center touch-manipulation"
 						aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+						aria-expanded={isMenuOpen}
 					>
 						{isMenuOpen ? <X size={28} /> : <Menu size={28} />}
 					</button>
@@ -51,10 +52,13 @@ export function Header() {
 					)}
 
 					{/* Desktop Navigation */}
-					<nav className="hidden md:flex items-center gap-6">
+					<nav
+						className="hidden md:flex items-center gap-6"
+						aria-label="Main navigation"
+					>
 						<Link
 							to="/"
-							className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 hover:text-green-500 transition-colors [&.active]:text-green-500"
+							className="min-h-[44px] px-3 flex items-center text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 hover:text-green-500 transition-colors [&.active]:text-green-500 touch-manipulation"
 							activeProps={{ className: "active" }}
 							activeOptions={{ exact: true }}
 						>
@@ -62,14 +66,14 @@ export function Header() {
 						</Link>
 						<Link
 							to="/about"
-							className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 hover:text-green-500 transition-colors [&.active]:text-green-500"
+							className="min-h-[44px] px-3 flex items-center text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 hover:text-green-500 transition-colors [&.active]:text-green-500 touch-manipulation"
 							activeProps={{ className: "active" }}
 						>
 							About
 						</Link>
 						<Link
 							to="/submit"
-							className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 hover:text-green-500 transition-colors [&.active]:text-green-500"
+							className="min-h-[44px] px-3 flex items-center text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 hover:text-green-500 transition-colors [&.active]:text-green-500 touch-manipulation"
 							activeProps={{ className: "active" }}
 						>
 							Submit
@@ -84,15 +88,16 @@ export function Header() {
 					<button
 						type="button"
 						onClick={() => setIsMenuOpen(false)}
-						className="absolute top-10 right-6 p-2 text-gray-400 hover:text-white transition-colors"
+						className="absolute top-4 right-4 min-w-[44px] min-h-[44px] p-3 text-gray-400 hover:text-white transition-colors flex items-center justify-center touch-manipulation"
+						aria-label="Close menu"
 					>
 						<X size={32} />
 					</button>
-					<nav className="flex flex-col items-center gap-8">
+					<nav className="flex flex-col items-center gap-6 w-full px-6">
 						<Link
 							to="/"
 							onClick={() => setIsMenuOpen(false)}
-							className="text-2xl uppercase tracking-[0.3em] font-bold text-gray-400 hover:text-green-500 transition-colors [&.active]:text-green-500"
+							className="min-h-[44px] w-full max-w-xs flex items-center justify-center text-2xl uppercase tracking-[0.3em] font-bold text-gray-400 hover:text-green-500 transition-colors [&.active]:text-green-500 touch-manipulation"
 							activeProps={{ className: "active" }}
 							activeOptions={{ exact: true }}
 						>
@@ -101,7 +106,7 @@ export function Header() {
 						<Link
 							to="/about"
 							onClick={() => setIsMenuOpen(false)}
-							className="text-2xl uppercase tracking-[0.3em] font-bold text-gray-400 hover:text-green-500 transition-colors [&.active]:text-green-500"
+							className="min-h-[44px] w-full max-w-xs flex items-center justify-center text-2xl uppercase tracking-[0.3em] font-bold text-gray-400 hover:text-green-500 transition-colors [&.active]:text-green-500 touch-manipulation"
 							activeProps={{ className: "active" }}
 						>
 							About
@@ -109,7 +114,7 @@ export function Header() {
 						<Link
 							to="/submit"
 							onClick={() => setIsMenuOpen(false)}
-							className="text-2xl uppercase tracking-[0.3em] font-bold text-gray-400 hover:text-green-500 transition-colors [&.active]:text-green-500"
+							className="min-h-[44px] w-full max-w-xs flex items-center justify-center text-2xl uppercase tracking-[0.3em] font-bold text-gray-400 hover:text-green-500 transition-colors [&.active]:text-green-500 touch-manipulation"
 							activeProps={{ className: "active" }}
 						>
 							Submit

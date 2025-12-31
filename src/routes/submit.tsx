@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
-import { AlertCircle, CheckCircle, Globe, Send, X } from "lucide-react";
+import { AlertCircle, CheckCircle, Globe, Send } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { z } from "zod";
 import { Footer } from "../components/Footer";
@@ -30,41 +30,44 @@ function Toast({
 	}, [onClose]);
 
 	return (
-		<div
-			role="alert"
-			aria-live="polite"
-			className={`toast-enter fixed bottom-28 left-1/2 z-50 flex items-center gap-4 px-6 py-4 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] border-2 ${
-				type === "success"
-					? "bg-gray-950 border-green-500 text-green-400"
-					: "bg-gray-950 border-red-500 text-red-400"
-			}`}
-		>
+		<>
+			{/* Backdrop overlay that blocks interaction */}
 			<div
-				className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
-					type === "success" ? "bg-green-500/20" : "bg-red-500/20"
-				}`}
+				className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+				aria-hidden="true"
 			>
-				{type === "success" ? (
-					<CheckCircle size={24} />
-				) : (
-					<AlertCircle size={24} />
-				)}
+				{/* Centered toast modal */}
+				<div
+					role="alert"
+					aria-live="polite"
+					className={`toast-enter flex items-center gap-4 sm:gap-6 px-6 sm:px-8 py-5 sm:py-6 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] border-2 w-full max-w-lg ${
+						type === "success"
+							? "bg-gray-950 border-green-500 text-green-400"
+							: "bg-gray-950 border-red-500 text-red-400"
+					}`}
+				>
+					<div
+						className={`flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center ${
+							type === "success" ? "bg-green-500/20" : "bg-red-500/20"
+						}`}
+					>
+						{type === "success" ? (
+							<CheckCircle size={32} className="sm:w-8 sm:h-8" />
+						) : (
+							<AlertCircle size={32} className="sm:w-8 sm:h-8" />
+						)}
+					</div>
+					<div className="flex flex-col">
+						<span className="text-sm sm:text-base font-black uppercase tracking-widest opacity-50">
+							{type === "success" ? "Success" : "Error"}
+						</span>
+						<span className="text-base sm:text-lg font-bold text-white">
+							{message}
+						</span>
+					</div>
+				</div>
 			</div>
-			<div className="flex flex-col">
-				<span className="text-xs font-black uppercase tracking-widest opacity-50">
-					{type === "success" ? "Success" : "Error"}
-				</span>
-				<span className="text-sm font-bold text-white">{message}</span>
-			</div>
-			<button
-				type="button"
-				onClick={onClose}
-				className="ml-4 p-2 hover:bg-white/10 rounded-xl transition-all hover:scale-110 active:scale-95"
-				aria-label="Dismiss notification"
-			>
-				<X size={18} className="text-gray-500 hover:text-white" />
-			</button>
-		</div>
+		</>
 	);
 }
 
@@ -172,10 +175,10 @@ function SubmitPage() {
 				/>
 			)}
 
-			<main className="px-6 pb-32 max-w-3xl mx-auto">
+			<main className="px-4 sm:px-6 pb-32 max-w-3xl mx-auto">
 				<form
 					onSubmit={handleSubmit}
-					className="bg-gray-900/40 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-8"
+					className="bg-gray-900/40 border border-gray-800 rounded-3xl p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8"
 				>
 					<div className="space-y-6">
 						<div>
@@ -186,7 +189,7 @@ function SubmitPage() {
 								Google Maps URL
 							</label>
 							<div className="relative">
-								<div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+								<div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-400">
 									<Globe size={16} />
 								</div>
 								<input
@@ -199,7 +202,7 @@ function SubmitPage() {
 									placeholder="https://maps.app.goo.gl/..."
 									className={`w-full bg-black border ${
 										formError ? "border-red-500" : "border-gray-800"
-									} rounded-xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors`}
+									} rounded-xl pl-10 sm:pl-12 pr-4 py-3.5 sm:py-3 text-base sm:text-sm focus:outline-none focus:border-green-500 transition-colors touch-manipulation`}
 								/>
 							</div>
 							{formError ? (
@@ -213,7 +216,7 @@ function SubmitPage() {
 							)}
 						</div>
 
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
 							<div>
 								<label
 									htmlFor={seatingId}
@@ -229,7 +232,7 @@ function SubmitPage() {
 									onChange={(e) =>
 										updateSeating(e.target.value as SubmissionForm["seating"])
 									}
-									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer text-gray-300"
+									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3.5 sm:py-3 text-base sm:text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer text-gray-300 touch-manipulation min-h-[48px]"
 								>
 									<option value="NO">No</option>
 									<option value="YES">Yes</option>
@@ -252,7 +255,7 @@ function SubmitPage() {
 											e.target.value as SubmissionForm["hasToilet"],
 										)
 									}
-									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer text-gray-300"
+									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3.5 sm:py-3 text-base sm:text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer text-gray-300 touch-manipulation min-h-[48px]"
 								>
 									<option value="NO">No</option>
 									<option value="YES">Yes</option>
@@ -260,7 +263,7 @@ function SubmitPage() {
 							</div>
 						</div>
 
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
 							<fieldset>
 								<legend className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
 									Price Level
@@ -271,7 +274,7 @@ function SubmitPage() {
 											type="button"
 											key={level}
 											onClick={() => updatePriceLevel(level)}
-											className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
+											className={`flex-1 min-h-[44px] py-2 rounded-lg text-xs font-bold transition-all touch-manipulation ${
 												formData.priceLevel === level
 													? "bg-green-500 text-black"
 													: "text-gray-400 hover:text-white"
@@ -297,7 +300,7 @@ function SubmitPage() {
 											type="button"
 											key={opt.id}
 											onClick={() => updatePayment(opt.id)}
-											className={`flex-1 py-2 rounded-lg text-[10px] uppercase font-bold transition-all ${
+											className={`flex-1 min-h-[44px] py-2 rounded-lg text-[10px] uppercase font-bold transition-all touch-manipulation ${
 												formData.payment === opt.id
 													? "bg-purple-500 text-white"
 													: "text-gray-400 hover:text-white"
@@ -313,8 +316,8 @@ function SubmitPage() {
 
 					<button
 						type="submit"
-						disabled={mutation.isPending}
-						className="w-full min-h-[52px] py-4 bg-green-500 text-black font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-green-400 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed group"
+						disabled={mutation.isPending || toast !== null}
+						className="w-full min-h-[52px] py-4 bg-green-500 text-black font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-green-400 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed group touch-manipulation"
 					>
 						{mutation.isPending ? (
 							<div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
