@@ -1,16 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { Beer, MapPin, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useGeolocation } from "../hooks/useGeolocation";
 
-interface HeaderProps {
-	userLocation?: {
-		latitude: number;
-		longitude: number;
-	} | null;
-}
-
-export function Header({ userLocation }: HeaderProps) {
+export function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const { location: userLocation } = useGeolocation();
 
 	return (
 		<header className="px-6 pt-10 pb-8 max-w-7xl mx-auto relative z-50">

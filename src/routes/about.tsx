@@ -53,43 +53,45 @@ function About() {
 				</section>
 
 				<section className="space-y-6 border-t border-gray-900 pt-12">
-					<h2 className="text-xl font-bold uppercase tracking-tight text-green-500">
+					<h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-green-500">
 						Get in Touch
 					</h2>
-					<div className="flex flex-wrap gap-4">
+					<div className="flex flex-wrap gap-x-8 gap-y-4">
 						<a
-							href="mailto:hello@sacadalabs.com"
-							className="flex items-center gap-3 px-6 py-3 bg-gray-900 border border-gray-800 rounded-xl hover:border-green-500/50 hover:bg-gray-800 transition-all group min-h-[48px]"
+							href="mailto:sacadalabs@gmail.com"
+							className="flex items-center gap-2.5 text-gray-400 hover:text-white transition-colors group"
 						>
 							<Mail
-								size={18}
-								className="text-gray-500 group-hover:text-green-500 transition-colors"
+								size={16}
+								className="text-gray-600 group-hover:text-green-500 transition-colors"
 							/>
-							<span className="text-sm font-bold">Contact Us</span>
+							<span className="text-sm font-medium">sacadalabs@gmail.com</span>
 						</a>
+
 						<a
 							href="https://github.com/sacadalabs/sit-in-spaeti"
 							target="_blank"
 							rel="noopener noreferrer"
-							className="flex items-center gap-3 px-6 py-3 bg-gray-900 border border-gray-800 rounded-xl hover:border-green-500/50 hover:bg-gray-800 transition-all group min-h-[48px]"
+							className="flex items-center gap-2.5 text-gray-400 hover:text-white transition-colors group"
 						>
 							<Github
-								size={18}
-								className="text-gray-500 group-hover:text-green-500 transition-colors"
+								size={16}
+								className="text-gray-600 group-hover:text-green-500 transition-colors"
 							/>
-							<span className="text-sm font-bold">GitHub</span>
+							<span className="text-sm font-medium">GitHub</span>
 						</a>
+
 						<a
 							href="https://sacadalabs.com"
 							target="_blank"
 							rel="noopener noreferrer"
-							className="flex items-center gap-3 px-6 py-3 bg-gray-900 border border-gray-800 rounded-xl hover:border-green-500/50 hover:bg-gray-800 transition-all group min-h-[48px]"
+							className="flex items-center gap-2.5 text-gray-400 hover:text-white transition-colors group"
 						>
 							<Globe
-								size={18}
-								className="text-gray-500 group-hover:text-green-500 transition-colors"
+								size={16}
+								className="text-gray-600 group-hover:text-green-500 transition-colors"
 							/>
-							<span className="text-sm font-bold">Sacada Labs</span>
+							<span className="text-sm font-medium">Sacada Labs</span>
 						</a>
 					</div>
 				</section>
