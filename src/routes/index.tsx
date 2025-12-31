@@ -69,6 +69,16 @@ function useGeolocation() {
 	return { location, error: bypassed ? null : error, isLoading, bypassError };
 }
 
+function formatDistance(meters: number | undefined): string | null {
+	if (meters === undefined || meters === null) {
+		return null;
+	}
+	if (meters < 1000) {
+		return `${Math.round(meters)} m`;
+	}
+	return `${(meters / 1000).toFixed(1)} km`;
+}
+
 const priceLevels = ["$", "$$", "$$$"] as const;
 
 const fetchSpatisSchema = z.object({
@@ -76,8 +86,8 @@ const fetchSpatisSchema = z.object({
 	priceLevel: z.enum(priceLevels).optional(),
 	acceptsCard: z.boolean().optional(),
 	hasSitting: z.boolean().optional(),
-	latitude: z.number().optional(),
-	longitude: z.number().optional(),
+	latitude: z.number(),
+	longitude: z.number(),
 });
 
 const fetchSpatis = createServerFn()
@@ -110,27 +120,35 @@ const fetchSpatis = createServerFn()
 			conditions.push(ne(spatis.seating, "UNKNOWN"));
 		}
 
-		// Build base query
-		const baseQuery =
-			conditions.length > 0
-				? db
-						.select()
-						.from(spatis)
-						.where(and(...conditions))
-				: db.select().from(spatis);
-
-		// Sort by distance if user location is provided
-		if (latitude !== undefined && longitude !== undefined) {
-			const records = await baseQuery.orderBy(
+		// Always calculate distance and sort by it
+		const records = await db
+			.select({
+				id: spatis.id,
+				name: spatis.name,
+				description: spatis.description,
+				address: spatis.address,
+				neighborhood: spatis.neighborhood,
+				zipCode: spatis.zipCode,
+				location: spatis.location,
+				seating: spatis.seating,
+				hasToilet: spatis.hasToilet,
+				priceLevel: spatis.priceLevel,
+				payment: spatis.payment,
+				createdAt: spatis.createdAt,
+				updatedAt: spatis.updatedAt,
+				distance: sql<number>`ST_DistanceSphere(
+					${spatis.location},
+					ST_MakePoint(${longitude}, ${latitude})
+				)`.as("distance"),
+			})
+			.from(spatis)
+			.where(conditions.length > 0 ? and(...conditions) : undefined)
+			.orderBy(
 				sql`ST_DistanceSphere(
 					${spatis.location},
 					ST_MakePoint(${longitude}, ${latitude})
 				)`,
 			);
-			return records;
-		}
-
-		const records = await baseQuery;
 		return records;
 	});
 
@@ -159,17 +177,22 @@ function App() {
 			userLocation,
 		],
 		queryFn: () => {
+			// Use user location if available, otherwise use center of Berlin as fallback
+			const latitude = userLocation?.latitude ?? 52.52;
+			const longitude = userLocation?.longitude ?? 13.405;
+
 			return fetchSpatisFn({
 				data: {
 					hasToilet: hasToiletFilter ? true : undefined,
 					priceLevel: priceLevelFilter,
 					acceptsCard: acceptsCardFilter ? true : undefined,
 					hasSitting: hasSittingFilter ? true : undefined,
-					latitude: userLocation?.latitude,
-					longitude: userLocation?.longitude,
+					latitude,
+					longitude,
 				},
 			});
 		},
+		enabled: !locationLoading, // Only run query when location loading is complete
 	});
 
 	if (locationLoading) {
@@ -384,9 +407,22 @@ function App() {
 										size={14}
 										className="text-gray-500 mt-1 flex-shrink-0"
 									/>
-									<p className="text-gray-400 text-sm leading-snug">
-										{spati.address}
-									</p>
+									<div className="flex-1">
+										<p className="text-gray-400 text-sm leading-snug">
+											{spati.address}
+										</p>
+										{"distance" in spati &&
+											typeof (spati as typeof spati & { distance?: number })
+												.distance === "number" && (
+												<p className="text-green-500 text-xs font-bold mt-1 flex items-center gap-1">
+													<Navigation size={12} />
+													{formatDistance(
+														(spati as typeof spati & { distance: number })
+															.distance,
+													) || ""}
+												</p>
+											)}
+									</div>
 								</div>
 
 								{spati.description && (
