@@ -24,6 +24,11 @@ const handler = new OpenAPIHandler(router, {
 						},
 					},
 				},
+				security: [
+					{
+						BasicAuth: [],
+					},
+				],
 			},
 		}),
 	],
