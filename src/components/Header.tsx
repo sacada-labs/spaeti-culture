@@ -76,7 +76,7 @@ export function Header() {
 							className="min-h-[44px] px-3 flex items-center text-[10px] uppercase tracking-[0.2em] font-bold text-gray-600 hover:text-green-500 transition-colors [&.active]:text-green-500 touch-manipulation"
 							activeProps={{ className: "active" }}
 						>
-							Submit
+							Submit Spot
 						</Link>
 					</nav>
 				</div>
@@ -117,7 +117,7 @@ export function Header() {
 							className="min-h-[44px] w-full max-w-xs flex items-center justify-center text-2xl uppercase tracking-[0.3em] font-bold text-gray-400 hover:text-green-500 transition-colors [&.active]:text-green-500 touch-manipulation"
 							activeProps={{ className: "active" }}
 						>
-							Submit
+							Submit Spot
 						</Link>
 					</nav>
 				</div>
