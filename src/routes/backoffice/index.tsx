@@ -10,7 +10,9 @@ import {
 	MapPin,
 	Plus,
 	Trash2,
+	X,
 } from "lucide-react";
+import { useId, useState } from "react";
 import { BackofficeHeader } from "../../components/backoffice/Header";
 import { Footer } from "../../components/Footer";
 import { Loading } from "../../components/Loading";
@@ -31,6 +33,11 @@ function AdminDashboard() {
 	const getSpatisFn = useServerFn(getAdminSpatis);
 	const deleteSpatiFn = useServerFn(deleteSpati);
 	const toggleReviewFn = useServerFn(toggleSpatiReview);
+	const deleteModalTitleId = useId();
+	const [deleteModalOpen, setDeleteModalOpen] = useState<{
+		id: number;
+		name: string;
+	} | null>(null);
 
 	const {
 		data: spaties,
@@ -45,6 +52,7 @@ function AdminDashboard() {
 		mutationFn: (id: number) => deleteSpatiFn({ data: id }),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["admin-spaties"] });
+			setDeleteModalOpen(null);
 		},
 	});
 
@@ -164,13 +172,12 @@ function AdminDashboard() {
 
 								<button
 									type="button"
-									onClick={() => {
-										if (
-											confirm("Are you sure you want to delete this Späti?")
-										) {
-											deleteMutation.mutate(spati.id);
-										}
-									}}
+									onClick={() =>
+										setDeleteModalOpen({
+											id: spati.id,
+											name: spati.name || "Unnamed Späti",
+										})
+									}
 									disabled={deleteMutation.isPending}
 									className="p-3 bg-red-500/10 text-red-400 border border-red-500/20 rounded-xl hover:bg-red-500/20 transition-all disabled:opacity-50"
 									title="Delete"
@@ -199,6 +206,82 @@ function AdminDashboard() {
 			</main>
 
 			<Footer />
+
+			{/* Delete Confirmation Modal */}
+			{deleteModalOpen && (
+				<div
+					className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+					role="dialog"
+					aria-modal="true"
+					aria-labelledby={deleteModalTitleId}
+				>
+					<button
+						type="button"
+						className="absolute inset-0"
+						onClick={() =>
+							!deleteMutation.isPending && setDeleteModalOpen(null)
+						}
+						aria-label="Close modal"
+						disabled={deleteMutation.isPending}
+					/>
+					<div className="relative bg-gray-950 border-2 border-red-500/30 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] w-full max-w-md p-6 sm:p-8">
+						<div className="flex items-start justify-between mb-6">
+							<div className="flex items-center gap-4">
+								<div className="flex-shrink-0 w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
+									<AlertTriangle size={24} className="text-red-400" />
+								</div>
+								<div>
+									<h3
+										id={deleteModalTitleId}
+										className="text-xl font-black uppercase tracking-tight text-white"
+									>
+										Delete Späti
+									</h3>
+									<p className="text-sm text-gray-400 mt-1">
+										This action cannot be undone
+									</p>
+								</div>
+							</div>
+							<button
+								type="button"
+								onClick={() => setDeleteModalOpen(null)}
+								disabled={deleteMutation.isPending}
+								className="p-2 text-gray-400 hover:text-white transition-colors disabled:opacity-50"
+								aria-label="Close"
+							>
+								<X size={20} />
+							</button>
+						</div>
+
+						<p className="text-gray-300 mb-6">
+							Are you sure you want to delete{" "}
+							<span className="font-bold text-white">
+								{deleteModalOpen.name}
+							</span>
+							? This will permanently remove it from the database.
+						</p>
+
+						<div className="flex gap-3">
+							<button
+								type="button"
+								onClick={() => setDeleteModalOpen(null)}
+								disabled={deleteMutation.isPending}
+								className="flex-1 px-6 py-3 bg-gray-800 text-gray-300 font-bold uppercase tracking-wider rounded-xl hover:bg-gray-700 transition-all disabled:opacity-50"
+							>
+								Cancel
+							</button>
+							<button
+								type="button"
+								onClick={() => deleteMutation.mutate(deleteModalOpen.id)}
+								disabled={deleteMutation.isPending}
+								className="flex-1 px-6 py-3 bg-red-500 text-white font-black uppercase tracking-wider rounded-xl hover:bg-red-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+							>
+								{deleteMutation.isPending ? "Deleting..." : "Delete"}
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }
