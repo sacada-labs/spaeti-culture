@@ -24,10 +24,10 @@ function About() {
 						neighborhood atmosphere.
 					</p>
 					<p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-						<span className="text-white font-bold italic">Späti Culture</span> is
-						a curated community resource designed to help Berliners and visitors
-						find those rare gems: Spätis with dedicated seating, available
-						toilets, and card payment support.
+						<span className="text-white font-bold italic">Späti Culture</span>{" "}
+						is a curated community resource designed to help Berliners and
+						visitors find those rare gems: Spätis with dedicated seating,
+						available toilets, and card payment support.
 					</p>
 				</section>
 

@@ -15,7 +15,6 @@ export const hasToiletEnum = pgEnum("has_toilet", ["YES", "NO"]);
 export const spatis = pgTable("spatis", {
 	id: serial().primaryKey(),
 	name: text().notNull(),
-	// description: text(),
 	address: text().notNull(),
 	neighborhood: text().notNull(),
 	zipCode: text().notNull(),
