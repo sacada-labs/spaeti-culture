@@ -4,10 +4,15 @@ import {
 	createRootRouteWithContext,
 	HeadContent,
 	Scripts,
+	useLocation,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { useEffect } from "react";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
+import { shouldLoadGA, trackPageView } from "../utils/analytics";
+
+const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
 
 interface MyRouterContext {
 	queryClient: QueryClient;
@@ -55,6 +60,18 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				rel: "stylesheet",
 				href: "https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap",
 			},
+			...(shouldLoadGA() && GA_MEASUREMENT_ID
+				? [
+						{
+							rel: "preconnect",
+							href: "https://www.googletagmanager.com",
+						},
+						{
+							rel: "preconnect",
+							href: "https://www.google-analytics.com",
+						},
+					]
+				: []),
 		],
 	}),
 
@@ -62,10 +79,40 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+	const location = useLocation();
+
+	// GA initialization is now done inline in the <head> script tag
+
+	useEffect(() => {
+		// Track page views on route changes
+		trackPageView(location.pathname + location.search);
+	}, [location.pathname, location.search]);
+
 	return (
 		<html lang="en">
 			<head>
 				<HeadContent />
+				{shouldLoadGA() && GA_MEASUREMENT_ID && (
+					<>
+						<script
+							async
+							src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+						/>
+						{/* Note: dangerouslySetInnerHTML is required here for Google Analytics initialization per Google's official documentation */}
+						<script
+							dangerouslySetInnerHTML={{
+								__html: `
+									window.dataLayer = window.dataLayer || [];
+									function gtag(){dataLayer.push(arguments);}
+									gtag('js', new Date());
+									gtag('config', '${GA_MEASUREMENT_ID}', {
+										send_page_view: false
+									});
+								`,
+							}}
+						/>
+					</>
+				)}
 			</head>
 			<body>
 				{children}

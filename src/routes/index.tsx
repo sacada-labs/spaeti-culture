@@ -17,6 +17,7 @@ import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { db } from "../db";
 import { spatis } from "../db/schema";
+import { trackEvent } from "../utils/analytics";
 
 export const Route = createFileRoute("/")({ component: App });
 
@@ -35,9 +36,11 @@ function useGeolocation() {
 						latitude: position.coords.latitude,
 						longitude: position.coords.longitude,
 					});
+					trackEvent("location_permission_granted");
 				},
 				(err) => {
 					setError(err.message);
+					trackEvent("location_permission_denied");
 				},
 				{
 					enableHighAccuracy: true,
@@ -46,7 +49,9 @@ function useGeolocation() {
 				},
 			);
 		} else if (typeof window !== "undefined") {
-			setError("Geolocation is not supported by your browser");
+			const errorMsg = "Geolocation is not supported by your browser";
+			setError(errorMsg);
+			trackEvent("location_not_supported");
 		}
 		return null;
 	});
@@ -64,6 +69,7 @@ function useGeolocation() {
 	const bypassError = () => {
 		setBypassed(true);
 		setIsLoading(false);
+		trackEvent("location_error_bypassed");
 	};
 
 	return { location, error: bypassed ? null : error, isLoading, bypassError };
@@ -236,7 +242,10 @@ function App() {
 					<div className="flex flex-col sm:flex-row gap-3 justify-center">
 						<button
 							type="button"
-							onClick={() => window.location.reload()}
+							onClick={() => {
+								trackEvent("location_retry");
+								window.location.reload();
+							}}
 							className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px] touch-manipulation"
 						>
 							Try Again
@@ -265,7 +274,11 @@ function App() {
 						<button
 							type="button"
 							aria-pressed={hasSittingFilter}
-							onClick={() => setHasSittingFilter(!hasSittingFilter)}
+							onClick={() => {
+								const newValue = !hasSittingFilter;
+								setHasSittingFilter(newValue);
+								trackEvent(`filter_sitting_${newValue ? "on" : "off"}`);
+							}}
 							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 								hasSittingFilter
 									? "bg-green-500 text-black"
@@ -279,7 +292,11 @@ function App() {
 						<button
 							type="button"
 							aria-pressed={hasToiletFilter}
-							onClick={() => setHasToiletFilter(!hasToiletFilter)}
+							onClick={() => {
+								const newValue = !hasToiletFilter;
+								setHasToiletFilter(newValue);
+								trackEvent(`filter_toilet_${newValue ? "on" : "off"}`);
+							}}
 							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 								hasToiletFilter
 									? "bg-green-500 text-black"
@@ -293,7 +310,11 @@ function App() {
 						<button
 							type="button"
 							aria-pressed={acceptsCardFilter}
-							onClick={() => setAcceptsCardFilter(!acceptsCardFilter)}
+							onClick={() => {
+								const newValue = !acceptsCardFilter;
+								setAcceptsCardFilter(newValue);
+								trackEvent(`filter_card_${newValue ? "on" : "off"}`);
+							}}
 							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 								acceptsCardFilter
 									? "bg-green-500 text-black"
@@ -322,11 +343,16 @@ function App() {
 									key={value}
 									aria-pressed={priceLevelFilter === value}
 									aria-label={label}
-									onClick={() =>
-										setPriceLevelFilter(
-											priceLevelFilter === value ? undefined : value,
-										)
-									}
+									onClick={() => {
+										const newValue =
+											priceLevelFilter === value ? undefined : value;
+										setPriceLevelFilter(newValue);
+										trackEvent(
+											newValue
+												? `filter_price_${newValue}`
+												: "filter_price_none",
+										);
+									}}
 									className={`min-w-[44px] min-h-[36px] sm:min-h-[36px] px-2 sm:px-3 rounded-lg text-xs font-bold transition-all touch-manipulation ${
 										priceLevelFilter === value
 											? "bg-green-500 text-black"
@@ -349,6 +375,7 @@ function App() {
 									setHasToiletFilter(false);
 									setAcceptsCardFilter(false);
 									setPriceLevelFilter(undefined);
+									trackEvent("clear_filters");
 								}}
 								className="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 text-gray-400 hover:text-red-400 transition-colors flex items-center justify-center touch-manipulation"
 								aria-label="Clear all filters"
@@ -395,6 +422,7 @@ function App() {
 									setHasToiletFilter(false);
 									setAcceptsCardFilter(false);
 									setPriceLevelFilter(undefined);
+									trackEvent("clear_filters");
 								}}
 								className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px] touch-manipulation"
 							>
