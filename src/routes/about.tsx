@@ -13,16 +13,11 @@ function About() {
 					The Mission
 				</h2>
 				<p className="text-gray-300 text-base sm:text-lg leading-relaxed">
-					Berlin's Spätis (late-night convenience stores) are the lifeblood of
-					the city's social fabric. But sometimes, you want more than just a
-					bottle on the go—you want a place to sit, talk, and soak in the
-					neighborhood atmosphere.
+					<span className="text-white font-bold italic">Späti Culture</span>{" "}
+					curates Berlin's best Spätis with seating, toilets, and card payment. We help you find places where you can actually sit down, have a conversation, and enjoy the neighborhood atmosphere, not just grab a bottle and go.
 				</p>
 				<p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-					<span className="text-white font-bold italic">Späti Culture</span> is
-					a curated community resource designed to help Berliners and visitors
-					find those rare gems: Spätis with dedicated seating, available
-					toilets, and card payment support.
+					Berlin's Späti Culture has been recognized by UNESCO, ensuring these essential neighborhood hubs remain protected from automated vending machine takeovers. This recognition celebrates the unique social role these spaces play in the city's cultural fabric.
 				</p>
 			</section>
 

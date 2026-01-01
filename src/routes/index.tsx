@@ -320,7 +320,7 @@ function App() {
 								});
 							}
 						}}
-						className={`min-h-[48px] min-w-[48px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
+						className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 							hasSittingFilter
 								? "bg-green-500 text-black"
 								: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
@@ -347,7 +347,7 @@ function App() {
 								});
 							}
 						}}
-						className={`min-h-[48px] min-w-[48px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
+						className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 							hasToiletFilter
 								? "bg-green-500 text-black"
 								: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
@@ -374,7 +374,7 @@ function App() {
 								});
 							}
 						}}
-						className={`min-h-[48px] min-w-[48px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
+						className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 							acceptsCardFilter
 								? "bg-green-500 text-black"
 								: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
@@ -449,7 +449,7 @@ function App() {
 									});
 								}
 							}}
-							className="ml-auto min-w-[48px] min-h-[48px] px-3 py-2 text-gray-400 hover:text-red-400 transition-colors flex items-center justify-center touch-manipulation"
+							className="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 text-gray-400 hover:text-red-400 transition-colors flex items-center justify-center touch-manipulation"
 							aria-label="Clear all filters"
 						>
 							<Trash2 size={18} />
