@@ -14,6 +14,7 @@ import {
 	seatingEnum,
 	spatis,
 } from "../db/schema";
+import { loggerMiddleware } from "../lib/logger";
 
 function Toast({
 	message,
@@ -82,6 +83,7 @@ const submitSubmissionSchema = z.object({
 type SubmissionForm = z.infer<typeof submitSubmissionSchema>;
 
 const submitSubmission = createServerFn()
+	.middleware([loggerMiddleware])
 	.inputValidator(submitSubmissionSchema)
 	.handler(async ({ data }) => {
 		await db.insert(spatis).values({

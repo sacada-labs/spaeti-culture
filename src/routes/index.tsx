@@ -18,6 +18,7 @@ import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { db } from "../db";
 import { spatis } from "../db/schema";
+import { loggerMiddleware } from "../lib/logger";
 
 export const Route = createFileRoute("/")({ component: App });
 
@@ -127,6 +128,7 @@ const fetchSpatisSchema = z.object({
 });
 
 const fetchSpatis = createServerFn()
+	.middleware([loggerMiddleware])
 	.inputValidator(fetchSpatisSchema)
 	.handler(async ({ data }) => {
 		const {

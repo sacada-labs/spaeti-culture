@@ -10,6 +10,7 @@ import {
 	spatis,
 } from "../../db/schema";
 import { authMiddleware } from "../auth";
+import { loggerMiddleware } from "../logger";
 
 export const spatiSchema = z.object({
 	id: z.number().optional(),
@@ -28,13 +29,13 @@ export const spatiSchema = z.object({
 });
 
 export const getAdminSpatis = createServerFn()
-	.middleware([authMiddleware])
+	.middleware([loggerMiddleware, authMiddleware])
 	.handler(async () => {
 		return db.select().from(spatis).orderBy(desc(spatis.createdAt));
 	});
 
 export const getAdminSpatiById = createServerFn()
-	.middleware([authMiddleware])
+	.middleware([loggerMiddleware, authMiddleware])
 	.inputValidator(z.coerce.number().int().positive())
 	.handler(async ({ data: id }) => {
 		const result = await db.select().from(spatis).where(eq(spatis.id, id));
@@ -42,7 +43,7 @@ export const getAdminSpatiById = createServerFn()
 	});
 
 export const upsertSpati = createServerFn()
-	.middleware([authMiddleware])
+	.middleware([loggerMiddleware, authMiddleware])
 	.inputValidator(spatiSchema)
 	.handler(async ({ data }) => {
 		const { id, latitude, longitude, reviewedAt, ...rest } = data;
@@ -67,7 +68,7 @@ export const upsertSpati = createServerFn()
 	});
 
 export const deleteSpati = createServerFn()
-	.middleware([authMiddleware])
+	.middleware([loggerMiddleware, authMiddleware])
 	.inputValidator(z.number())
 	.handler(async ({ data: id }) => {
 		await db.delete(spatis).where(eq(spatis.id, id));
@@ -75,7 +76,7 @@ export const deleteSpati = createServerFn()
 	});
 
 export const toggleSpatiReview = createServerFn()
-	.middleware([authMiddleware])
+	.middleware([loggerMiddleware, authMiddleware])
 	.inputValidator(z.object({ id: z.number(), reviewed: z.boolean() }))
 	.handler(async ({ data }) => {
 		await db

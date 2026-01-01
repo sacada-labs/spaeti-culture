@@ -2,6 +2,7 @@ import { redirect } from "@tanstack/react-router";
 import { createMiddleware, createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { z } from "zod";
+import { loggerMiddleware } from "./logger";
 
 const AUTH_COOKIE_NAME = "backoffice_auth";
 const SESSION_VALUE = "authenticated";
@@ -34,6 +35,7 @@ export const authMiddleware = createMiddleware().server(async ({ next }) => {
 });
 
 export const login = createServerFn()
+	.middleware([loggerMiddleware])
 	.inputValidator(loginSchema)
 	.handler(async ({ data }) => {
 		const { username, password } = data;
@@ -65,7 +67,7 @@ export const login = createServerFn()
 	});
 
 export const logout = createServerFn()
-	.middleware([authMiddleware])
+	.middleware([loggerMiddleware, authMiddleware])
 	.handler(async () => {
 		const cookieValue = `${AUTH_COOKIE_NAME}=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0`;
 
@@ -79,7 +81,7 @@ export const logout = createServerFn()
 	});
 
 export const checkAuth = createServerFn()
-	.middleware([authMiddleware])
+	.middleware([loggerMiddleware, authMiddleware])
 	.handler(async () => {
 		return { authenticated: true };
 	});
