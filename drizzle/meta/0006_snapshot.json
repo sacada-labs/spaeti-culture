@@ -1,0 +1,156 @@
+{
+  "id": "4da8a138-a107-4b5a-87e1-78542dbd1d1f",
+  "prevId": "5e0eb035-9b0d-43e6-bb82-83689fce6e99",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.spatis": {
+      "name": "spatis",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "neighborhood": {
+          "name": "neighborhood",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "zipCode": {
+          "name": "zipCode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "location": {
+          "name": "location",
+          "type": "geometry(point)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "google_maps_url": {
+          "name": "google_maps_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "seating": {
+          "name": "seating",
+          "type": "seating",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "has_toilet": {
+          "name": "has_toilet",
+          "type": "has_toilet",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price_level": {
+          "name": "price_level",
+          "type": "price_level",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payment": {
+          "name": "payment",
+          "type": "payment",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reviewed_at": {
+          "name": "reviewed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.has_toilet": {
+      "name": "has_toilet",
+      "schema": "public",
+      "values": [
+        "YES",
+        "NO"
+      ]
+    },
+    "public.payment": {
+      "name": "payment",
+      "schema": "public",
+      "values": [
+        "CARD",
+        "CASH_ONLY"
+      ]
+    },
+    "public.price_level": {
+      "name": "price_level",
+      "schema": "public",
+      "values": [
+        "$$$",
+        "$$",
+        "$"
+      ]
+    },
+    "public.seating": {
+      "name": "seating",
+      "schema": "public",
+      "values": [
+        "YES",
+        "NO"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -36,6 +36,13 @@
       "when": 1767292190056,
       "tag": "0005_skinny_the_fallen",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1767292405031,
+      "tag": "0006_smiling_human_fly",
+      "breakpoints": true
     }
   ]
 }

@@ -159,7 +159,10 @@ const fetchSpatis = createServerFn()
 		}
 
 		// Build base query
-		const baseQuery = db.select().from(spatis).where(and(...conditions));
+		const baseQuery = db
+			.select()
+			.from(spatis)
+			.where(and(...conditions));
 
 		// Calculate and include distance if user location is provided
 		if (latitude !== undefined && longitude !== undefined) {
