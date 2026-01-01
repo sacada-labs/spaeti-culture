@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, isNotNull, sql } from "drizzle-orm";
 import {
 	Armchair,
 	CreditCard,
@@ -140,7 +140,7 @@ const fetchSpatis = createServerFn()
 			longitude,
 		} = data;
 
-		const conditions = [];
+		const conditions = [isNotNull(spatis.reviewedAt)];
 
 		if (hasToilet !== undefined) {
 			conditions.push(eq(spatis.hasToilet, hasToilet ? "YES" : "NO"));
@@ -159,13 +159,7 @@ const fetchSpatis = createServerFn()
 		}
 
 		// Build base query
-		const baseQuery =
-			conditions.length > 0
-				? db
-						.select()
-						.from(spatis)
-						.where(and(...conditions))
-				: db.select().from(spatis);
+		const baseQuery = db.select().from(spatis).where(and(...conditions));
 
 		// Calculate and include distance if user location is provided
 		if (latitude !== undefined && longitude !== undefined) {
@@ -189,7 +183,7 @@ const fetchSpatis = createServerFn()
 					)`.as("distance"),
 				})
 				.from(spatis)
-				.where(conditions.length > 0 ? and(...conditions) : undefined)
+				.where(and(...conditions))
 				.orderBy(
 					sql`ST_DistanceSphere(
 						${spatis.location},

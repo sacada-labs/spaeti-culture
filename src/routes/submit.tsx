@@ -12,7 +12,7 @@ import {
 	paymentEnum,
 	priceLevelEnum,
 	seatingEnum,
-	submissions,
+	spatis,
 } from "../db/schema";
 
 function Toast({
@@ -84,7 +84,14 @@ type SubmissionForm = z.infer<typeof submitSubmissionSchema>;
 const submitSubmission = createServerFn()
 	.inputValidator(submitSubmissionSchema)
 	.handler(async ({ data }) => {
-		await db.insert(submissions).values(data);
+		await db.insert(spatis).values({
+			googleMapsUrl: data.googleMapsUrl,
+			seating: data.seating,
+			hasToilet: data.hasToilet,
+			priceLevel: data.priceLevel,
+			payment: data.payment,
+			reviewedAt: null,
+		});
 		return { success: true };
 	});
 

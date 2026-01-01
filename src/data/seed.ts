@@ -113,24 +113,8 @@ function generateSpati() {
 	const nameBase = spatiNames[Math.floor(Math.random() * spatiNames.length)];
 	const name = Math.random() > 0.7 ? `${nameBase} ${streetName}` : nameBase;
 
-	const descriptions = [
-		"Classic Berlin Späti with friendly staff",
-		"Open late, great selection of drinks",
-		"Corner shop with outdoor seating",
-		"Popular neighborhood Späti",
-		"24/7 convenience store",
-		"Local favorite with good prices",
-		"Small but well-stocked",
-		"Friendly owner, great atmosphere",
-		null,
-		null,
-		null,
-	]; // Some nulls for variety
-
 	return {
 		name,
-		description:
-			descriptions[Math.floor(Math.random() * descriptions.length)] || null,
 		address,
 		neighborhood: neighborhood.name,
 		zipCode: neighborhood.zipCode,
@@ -141,6 +125,7 @@ function generateSpati() {
 		priceLevel:
 			priceLevelOptions[Math.floor(Math.random() * priceLevelOptions.length)],
 		payment: paymentOptions[Math.floor(Math.random() * paymentOptions.length)],
+		reviewedAt: new Date(),
 	};
 }
 

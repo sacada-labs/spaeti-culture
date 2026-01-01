@@ -14,19 +14,21 @@ export const hasToiletEnum = pgEnum("has_toilet", ["YES", "NO"]);
 
 export const spatis = pgTable("spatis", {
 	id: serial().primaryKey(),
-	name: text().notNull(),
-	address: text().notNull(),
-	neighborhood: text().notNull(),
-	zipCode: text().notNull(),
+	name: text(),
+	address: text(),
+	neighborhood: text(),
+	zipCode: text(),
 	location: geometry("location", {
 		type: "point",
 		mode: "xy",
 		srid: 4326,
-	}).notNull(),
+	}),
+	googleMapsUrl: text("google_maps_url"),
 	seating: seatingEnum("seating").notNull(),
 	hasToilet: hasToiletEnum("has_toilet").notNull(),
 	priceLevel: priceLevelEnum("price_level").notNull(),
 	payment: paymentEnum("payment").notNull(),
+	reviewedAt: timestamp("reviewed_at"),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
