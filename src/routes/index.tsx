@@ -17,7 +17,7 @@ import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { db } from "../db";
 import { spatis } from "../db/schema";
-import { trackEvent } from "../utils/analytics";
+import { trackCustomEvent } from "../utils/analytics";
 
 export const Route = createFileRoute("/")({ component: App });
 
@@ -36,11 +36,11 @@ function useGeolocation() {
 						latitude: position.coords.latitude,
 						longitude: position.coords.longitude,
 					});
-					trackEvent("location_permission_granted");
+					trackCustomEvent("location_permission_granted");
 				},
 				(err) => {
 					setError(err.message);
-					trackEvent("location_permission_denied");
+					trackCustomEvent("location_permission_denied");
 				},
 				{
 					enableHighAccuracy: true,
@@ -51,7 +51,7 @@ function useGeolocation() {
 		} else if (typeof window !== "undefined") {
 			const errorMsg = "Geolocation is not supported by your browser";
 			setError(errorMsg);
-			trackEvent("location_not_supported");
+			trackCustomEvent("location_not_supported");
 		}
 		return null;
 	});
@@ -69,7 +69,7 @@ function useGeolocation() {
 	const bypassError = () => {
 		setBypassed(true);
 		setIsLoading(false);
-		trackEvent("location_error_bypassed");
+		trackCustomEvent("location_error_bypassed");
 	};
 
 	return { location, error: bypassed ? null : error, isLoading, bypassError };
@@ -243,7 +243,7 @@ function App() {
 						<button
 							type="button"
 							onClick={() => {
-								trackEvent("location_retry");
+								trackCustomEvent("location_retry");
 								window.location.reload();
 							}}
 							className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px] touch-manipulation"
@@ -277,7 +277,7 @@ function App() {
 							onClick={() => {
 								const newValue = !hasSittingFilter;
 								setHasSittingFilter(newValue);
-								trackEvent(`filter_sitting_${newValue ? "on" : "off"}`);
+								trackCustomEvent(`filter_sitting_${newValue ? "on" : "off"}`);
 							}}
 							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 								hasSittingFilter
@@ -295,7 +295,7 @@ function App() {
 							onClick={() => {
 								const newValue = !hasToiletFilter;
 								setHasToiletFilter(newValue);
-								trackEvent(`filter_toilet_${newValue ? "on" : "off"}`);
+								trackCustomEvent(`filter_toilet_${newValue ? "on" : "off"}`);
 							}}
 							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 								hasToiletFilter
@@ -313,7 +313,7 @@ function App() {
 							onClick={() => {
 								const newValue = !acceptsCardFilter;
 								setAcceptsCardFilter(newValue);
-								trackEvent(`filter_card_${newValue ? "on" : "off"}`);
+								trackCustomEvent(`filter_card_${newValue ? "on" : "off"}`);
 							}}
 							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 								acceptsCardFilter
@@ -347,7 +347,7 @@ function App() {
 										const newValue =
 											priceLevelFilter === value ? undefined : value;
 										setPriceLevelFilter(newValue);
-										trackEvent(
+										trackCustomEvent(
 											newValue
 												? `filter_price_${newValue}`
 												: "filter_price_none",
@@ -375,7 +375,7 @@ function App() {
 									setHasToiletFilter(false);
 									setAcceptsCardFilter(false);
 									setPriceLevelFilter(undefined);
-									trackEvent("clear_filters");
+									trackCustomEvent("clear_filters");
 								}}
 								className="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 text-gray-400 hover:text-red-400 transition-colors flex items-center justify-center touch-manipulation"
 								aria-label="Clear all filters"
@@ -422,7 +422,7 @@ function App() {
 									setHasToiletFilter(false);
 									setAcceptsCardFilter(false);
 									setPriceLevelFilter(undefined);
-									trackEvent("clear_filters");
+									trackCustomEvent("clear_filters");
 								}}
 								className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px] touch-manipulation"
 							>

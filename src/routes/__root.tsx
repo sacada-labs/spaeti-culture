@@ -98,8 +98,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 							async
 							src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
 						/>
-						{/* Note: dangerouslySetInnerHTML is required here for Google Analytics initialization per Google's official documentation */}
+
 						<script
+							// biome-ignore lint/security/noDangerouslySetInnerHtml: Required for Google Analytics initialization per Google's official documentation
 							dangerouslySetInnerHTML={{
 								__html: `
 									window.dataLayer = window.dataLayer || [];

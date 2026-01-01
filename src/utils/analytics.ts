@@ -16,39 +16,12 @@ declare global {
 
 const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
 
-/**
- * Check if Google Analytics should be loaded
- */
 export function shouldLoadGA(): boolean {
 	return (
 		typeof window !== "undefined" && !!GA_MEASUREMENT_ID && import.meta.env.PROD
 	);
 }
 
-/**
- * Initialize Google Analytics
- */
-export function initGA(): void {
-	if (!shouldLoadGA()) {
-		return;
-	}
-
-	// Initialize dataLayer
-	window.dataLayer = window.dataLayer || [];
-	window.gtag = (...args: unknown[]) => {
-		window.dataLayer?.push(args);
-	};
-
-	// Set initial timestamp
-	window.gtag("js", new Date());
-	window.gtag("config", GA_MEASUREMENT_ID, {
-		send_page_view: false, // We'll track page views manually
-	});
-}
-
-/**
- * Track a page view
- */
 export function trackPageView(path?: string): void {
 	if (!shouldLoadGA() || !window.gtag) {
 		return;
@@ -59,10 +32,7 @@ export function trackPageView(path?: string): void {
 	});
 }
 
-/**
- * Track a custom event
- */
-export function trackEvent(eventName: string): void {
+export function trackCustomEvent(eventName: string): void {
 	if (!shouldLoadGA() || !window.gtag) {
 		return;
 	}
