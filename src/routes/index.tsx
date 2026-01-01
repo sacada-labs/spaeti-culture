@@ -27,8 +27,12 @@ type UserLocation = {
 } | null;
 
 function useGeolocation() {
-	const [location, setLocation] = useState<UserLocation>(() => {
-		// Lazy initialization - request immediately
+	const [location, setLocation] = useState<UserLocation>(null);
+	const [error, setError] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+	const [bypassed, setBypassed] = useState(false);
+
+	useEffect(() => {
 		if (typeof window !== "undefined" && navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(
 				(position) => {
@@ -45,6 +49,7 @@ function useGeolocation() {
 							action: "location_permission_granted",
 						});
 					}
+					setIsLoading(false);
 				},
 				(err) => {
 					setError(err.message);
@@ -57,6 +62,7 @@ function useGeolocation() {
 							action: "location_permission_denied",
 						});
 					}
+					setIsLoading(false);
 				},
 				{
 					enableHighAccuracy: true,
@@ -76,19 +82,11 @@ function useGeolocation() {
 					action: "location_not_supported",
 				});
 			}
-		}
-		return null;
-	});
-	const [error, setError] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
-	const [bypassed, setBypassed] = useState(false);
-
-	// Update loading state when location or error changes
-	useEffect(() => {
-		if (location !== null || error !== null) {
+			setIsLoading(false);
+		} else {
 			setIsLoading(false);
 		}
-	}, [location, error]);
+	}, []);
 
 	const bypassError = () => {
 		setBypassed(true);

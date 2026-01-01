@@ -6,7 +6,12 @@ export type UserLocation = {
 } | null;
 
 export function useGeolocation() {
-	const [location, setLocation] = useState<UserLocation>(() => {
+	const [location, setLocation] = useState<UserLocation>(null);
+	const [error, setError] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+	const [bypassed, setBypassed] = useState(false);
+
+	useEffect(() => {
 		if (typeof window !== "undefined" && navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(
 				(position) => {
@@ -14,9 +19,11 @@ export function useGeolocation() {
 						latitude: position.coords.latitude,
 						longitude: position.coords.longitude,
 					});
+					setIsLoading(false);
 				},
 				(err) => {
 					setError(err.message);
+					setIsLoading(false);
 				},
 				{
 					enableHighAccuracy: true,
@@ -26,18 +33,11 @@ export function useGeolocation() {
 			);
 		} else if (typeof window !== "undefined") {
 			setError("Geolocation is not supported by your browser");
-		}
-		return null;
-	});
-	const [error, setError] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
-	const [bypassed, setBypassed] = useState(false);
-
-	useEffect(() => {
-		if (location !== null || error !== null) {
+			setIsLoading(false);
+		} else {
 			setIsLoading(false);
 		}
-	}, [location, error]);
+	}, []);
 
 	const bypassError = () => {
 		setBypassed(true);

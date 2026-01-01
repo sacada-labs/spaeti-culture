@@ -12,7 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SubmitRouteImport } from './routes/submit'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BackofficeIndexRouteImport } from './routes/backoffice/index'
+import { Route as BackofficeNewRouteImport } from './routes/backoffice/new'
+import { Route as BackofficeLoginRouteImport } from './routes/backoffice/login'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
+import { Route as BackofficeEditIdRouteImport } from './routes/backoffice/edit.$id'
 
 const SubmitRoute = SubmitRouteImport.update({
   id: '/submit',
@@ -29,9 +33,29 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BackofficeIndexRoute = BackofficeIndexRouteImport.update({
+  id: '/backoffice/',
+  path: '/backoffice/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BackofficeNewRoute = BackofficeNewRouteImport.update({
+  id: '/backoffice/new',
+  path: '/backoffice/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BackofficeLoginRoute = BackofficeLoginRouteImport.update({
+  id: '/backoffice/login',
+  path: '/backoffice/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHealthRoute = ApiHealthRouteImport.update({
   id: '/api/health',
   path: '/api/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BackofficeEditIdRoute = BackofficeEditIdRouteImport.update({
+  id: '/backoffice/edit/$id',
+  path: '/backoffice/edit/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -40,12 +64,20 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/submit': typeof SubmitRoute
   '/api/health': typeof ApiHealthRoute
+  '/backoffice/login': typeof BackofficeLoginRoute
+  '/backoffice/new': typeof BackofficeNewRoute
+  '/backoffice': typeof BackofficeIndexRoute
+  '/backoffice/edit/$id': typeof BackofficeEditIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/submit': typeof SubmitRoute
   '/api/health': typeof ApiHealthRoute
+  '/backoffice/login': typeof BackofficeLoginRoute
+  '/backoffice/new': typeof BackofficeNewRoute
+  '/backoffice': typeof BackofficeIndexRoute
+  '/backoffice/edit/$id': typeof BackofficeEditIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +85,42 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/submit': typeof SubmitRoute
   '/api/health': typeof ApiHealthRoute
+  '/backoffice/login': typeof BackofficeLoginRoute
+  '/backoffice/new': typeof BackofficeNewRoute
+  '/backoffice/': typeof BackofficeIndexRoute
+  '/backoffice/edit/$id': typeof BackofficeEditIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/submit' | '/api/health'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/submit'
+    | '/api/health'
+    | '/backoffice/login'
+    | '/backoffice/new'
+    | '/backoffice'
+    | '/backoffice/edit/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/submit' | '/api/health'
-  id: '__root__' | '/' | '/about' | '/submit' | '/api/health'
+  to:
+    | '/'
+    | '/about'
+    | '/submit'
+    | '/api/health'
+    | '/backoffice/login'
+    | '/backoffice/new'
+    | '/backoffice'
+    | '/backoffice/edit/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/submit'
+    | '/api/health'
+    | '/backoffice/login'
+    | '/backoffice/new'
+    | '/backoffice/'
+    | '/backoffice/edit/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +128,10 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   SubmitRoute: typeof SubmitRoute
   ApiHealthRoute: typeof ApiHealthRoute
+  BackofficeLoginRoute: typeof BackofficeLoginRoute
+  BackofficeNewRoute: typeof BackofficeNewRoute
+  BackofficeIndexRoute: typeof BackofficeIndexRoute
+  BackofficeEditIdRoute: typeof BackofficeEditIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -92,11 +157,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/backoffice/': {
+      id: '/backoffice/'
+      path: '/backoffice'
+      fullPath: '/backoffice'
+      preLoaderRoute: typeof BackofficeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/backoffice/new': {
+      id: '/backoffice/new'
+      path: '/backoffice/new'
+      fullPath: '/backoffice/new'
+      preLoaderRoute: typeof BackofficeNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/backoffice/login': {
+      id: '/backoffice/login'
+      path: '/backoffice/login'
+      fullPath: '/backoffice/login'
+      preLoaderRoute: typeof BackofficeLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/health': {
       id: '/api/health'
       path: '/api/health'
       fullPath: '/api/health'
       preLoaderRoute: typeof ApiHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/backoffice/edit/$id': {
+      id: '/backoffice/edit/$id'
+      path: '/backoffice/edit/$id'
+      fullPath: '/backoffice/edit/$id'
+      preLoaderRoute: typeof BackofficeEditIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -107,6 +200,10 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   SubmitRoute: SubmitRoute,
   ApiHealthRoute: ApiHealthRoute,
+  BackofficeLoginRoute: BackofficeLoginRoute,
+  BackofficeNewRoute: BackofficeNewRoute,
+  BackofficeIndexRoute: BackofficeIndexRoute,
+  BackofficeEditIdRoute: BackofficeEditIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

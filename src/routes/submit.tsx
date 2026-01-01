@@ -92,7 +92,6 @@ const submitSubmission = createServerFn()
 			payment: data.payment,
 			reviewedAt: null,
 		});
-		console.log("Submission inserted");
 		return { success: true };
 	});
 
