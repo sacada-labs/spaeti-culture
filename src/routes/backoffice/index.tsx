@@ -19,7 +19,7 @@ import {
 	deleteSpati,
 	getAdminSpatis,
 	toggleSpatiReview,
-} from "../../lib/spatis-admin";
+} from "../../lib/backoffice/server-functions";
 
 export const Route = createFileRoute("/backoffice/")({
 	beforeLoad: backofficeBeforeLoad,

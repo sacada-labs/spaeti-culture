@@ -10,7 +10,10 @@ import {
 	priceLevelEnum,
 	seatingEnum,
 } from "../../db/schema";
-import { type spatiSchema, upsertSpati } from "../../lib/spatis-admin";
+import {
+	type spatiSchema,
+	upsertSpati,
+} from "../../lib/backoffice/server-functions";
 
 interface SpatiFormProps {
 	initialData?: {

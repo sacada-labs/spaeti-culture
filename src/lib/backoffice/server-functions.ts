@@ -1,23 +1,23 @@
 import { createServerFn } from "@tanstack/react-start";
 import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
-import { db } from "../db";
+import { db } from "../../db";
 import {
 	hasToiletEnum,
 	paymentEnum,
 	priceLevelEnum,
 	seatingEnum,
 	spatis,
-} from "../db/schema";
-import { authMiddleware } from "./auth";
+} from "../../db/schema";
+import { authMiddleware } from "../auth";
 
 export const spatiSchema = z.object({
 	id: z.number().optional(),
-	name: z.string().min(1, "Name is required"),
-	address: z.string().min(1, "Address is required"),
+	name: z.string().min(1),
+	address: z.string().min(1),
 	neighborhood: z.string().optional(),
 	zipCode: z.string().optional(),
-	googleMapsUrl: z.string().url("Invalid Google Maps URL"),
+	googleMapsUrl: z.string().url(),
 	seating: z.enum(seatingEnum.enumValues),
 	hasToilet: z.enum(hasToiletEnum.enumValues),
 	priceLevel: z.enum(priceLevelEnum.enumValues),

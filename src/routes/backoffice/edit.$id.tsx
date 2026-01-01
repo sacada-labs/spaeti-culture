@@ -6,7 +6,7 @@ import { SpatiForm } from "../../components/backoffice/SpatiForm";
 import { Footer } from "../../components/Footer";
 import { Loading } from "../../components/Loading";
 import { backofficeBeforeLoad } from "../../lib/auth";
-import { getAdminSpatiById } from "../../lib/spatis-admin";
+import { getAdminSpatiById } from "../../lib/backoffice/server-functions";
 
 export const Route = createFileRoute("/backoffice/edit/$id")({
 	beforeLoad: backofficeBeforeLoad,
