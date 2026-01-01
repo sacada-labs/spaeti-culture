@@ -1,3 +1,5 @@
+import { createIsomorphicFn } from "@tanstack/react-start";
+
 /**
  * Google Analytics 4 utilities
  * Only loads and tracks in production when VITE_GA_MEASUREMENT_ID is set
@@ -16,26 +18,34 @@ declare global {
 
 const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
 
-export function shouldLoadGA(): boolean {
-	return (
-		typeof window !== "undefined" && !!GA_MEASUREMENT_ID && import.meta.env.PROD
-	);
-}
+export const shouldLoadGA = createIsomorphicFn()
+	.client(() => {
+		return (
+			typeof window !== "undefined" &&
+			!!GA_MEASUREMENT_ID &&
+			import.meta.env.PROD
+		);
+	})
+	.server(() => {
+		return !!GA_MEASUREMENT_ID && import.meta.env.PROD;
+	});
 
-export function trackPageView(path?: string): void {
+export const trackPageView = (path: string): void => {
+    console.log("trackPageView", path);
 	if (!shouldLoadGA() || !window.gtag) {
 		return;
 	}
 
 	window.gtag("config", GA_MEASUREMENT_ID, {
-		page_path: path || window.location.pathname + window.location.search,
+		page_path: path,
 	});
-}
+};
 
-export function trackCustomEvent(eventName: string): void {
+export const trackCustomEvent = (eventName: string): void => {
+    console.log("trackCustomEvent", eventName);
 	if (!shouldLoadGA() || !window.gtag) {
 		return;
 	}
 
 	window.gtag("event", eventName);
-}
+};

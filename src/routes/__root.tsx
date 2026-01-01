@@ -60,7 +60,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				rel: "stylesheet",
 				href: "https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap",
 			},
-			...(shouldLoadGA() && GA_MEASUREMENT_ID
+			...(shouldLoadGA()
 				? [
 						{
 							rel: "preconnect",
@@ -81,18 +81,17 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function RootDocument({ children }: { children: React.ReactNode }) {
 	const location = useLocation();
 
-	// GA initialization is now done inline in the <head> script tag
-
+	// Track page views on route changes
 	useEffect(() => {
-		// Track page views on route changes
-		trackPageView(location.pathname + location.search);
-	}, [location.pathname, location.search]);
+		trackPageView(location.pathname + location.searchStr);
+	}, [location.pathname, location.searchStr]);
 
 	return (
 		<html lang="en">
 			<head>
 				<HeadContent />
-				{shouldLoadGA() && GA_MEASUREMENT_ID && (
+				{/* Start of Google Analytics configuration */}
+				{shouldLoadGA() && (
 					<>
 						<script
 							async
@@ -114,6 +113,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 						/>
 					</>
 				)}
+				{/* End of Google Analytics configuration */}
 			</head>
 			<body>
 				{children}
