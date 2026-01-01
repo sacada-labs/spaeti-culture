@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { BackofficeHeader } from "../../components/backoffice/Header";
 import { SpatiForm } from "../../components/backoffice/SpatiForm";
 import { Footer } from "../../components/Footer";
+import { Header } from "../../components/Header";
 import { Loading } from "../../components/Loading";
 import { backofficeBeforeLoad } from "../../lib/auth";
 import { getAdminSpatiById } from "../../lib/backoffice/server-functions";
@@ -50,7 +50,7 @@ function EditSpatiPage() {
 
 	return (
 		<div className="min-h-screen bg-black text-white selection:bg-green-500 selection:text-black">
-			<BackofficeHeader />
+			<Header />
 
 			<main className="px-4 sm:px-6 py-12 max-w-5xl mx-auto">
 				<div className="mb-10">

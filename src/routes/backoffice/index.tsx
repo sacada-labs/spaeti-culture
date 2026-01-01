@@ -13,8 +13,8 @@ import {
 	X,
 } from "lucide-react";
 import { useId, useState } from "react";
-import { BackofficeHeader } from "../../components/backoffice/Header";
 import { Footer } from "../../components/Footer";
+import { Header } from "../../components/Header";
 import { Loading } from "../../components/Loading";
 import { backofficeBeforeLoad } from "../../lib/auth";
 import {
@@ -68,7 +68,7 @@ function AdminDashboard() {
 
 	return (
 		<div className="min-h-screen bg-black text-white selection:bg-green-500 selection:text-black">
-			<BackofficeHeader />
+			<Header />
 
 			<main className="px-4 sm:px-6 py-12 max-w-7xl mx-auto">
 				<div className="flex flex-col sm:flex-row justify-between items-center mb-10 gap-6">

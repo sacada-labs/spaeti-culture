@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BackofficeHeader } from "../../components/backoffice/Header";
 import { SpatiForm } from "../../components/backoffice/SpatiForm";
 import { Footer } from "../../components/Footer";
+import { Header } from "../../components/Header";
 import { backofficeBeforeLoad } from "../../lib/auth";
 
 export const Route = createFileRoute("/backoffice/new")({
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/backoffice/new")({
 function NewSpatiPage() {
 	return (
 		<div className="min-h-screen bg-black text-white selection:bg-green-500 selection:text-black">
-			<BackofficeHeader />
+			<Header />
 
 			<main className="px-4 sm:px-6 py-12 max-w-5xl mx-auto">
 				<div className="mb-10">
