@@ -12,12 +12,12 @@ import {
 	Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import ReactGA from "react-ga4";
 import { z } from "zod";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { db } from "../db";
 import { spatis } from "../db/schema";
-import { trackCustomEvent } from "../utils/analytics";
 
 export const Route = createFileRoute("/")({ component: App });
 
@@ -36,11 +36,27 @@ function useGeolocation() {
 						latitude: position.coords.latitude,
 						longitude: position.coords.longitude,
 					});
-					trackCustomEvent("location_permission_granted");
+					if (
+						typeof window !== "undefined" &&
+						import.meta.env.VITE_GA_MEASUREMENT_ID
+					) {
+						ReactGA.event({
+							category: "User",
+							action: "location_permission_granted",
+						});
+					}
 				},
 				(err) => {
 					setError(err.message);
-					trackCustomEvent("location_permission_denied");
+					if (
+						typeof window !== "undefined" &&
+						import.meta.env.VITE_GA_MEASUREMENT_ID
+					) {
+						ReactGA.event({
+							category: "User",
+							action: "location_permission_denied",
+						});
+					}
 				},
 				{
 					enableHighAccuracy: true,
@@ -51,7 +67,15 @@ function useGeolocation() {
 		} else if (typeof window !== "undefined") {
 			const errorMsg = "Geolocation is not supported by your browser";
 			setError(errorMsg);
-			trackCustomEvent("location_not_supported");
+			if (
+				typeof window !== "undefined" &&
+				import.meta.env.VITE_GA_MEASUREMENT_ID
+			) {
+				ReactGA.event({
+					category: "User",
+					action: "location_not_supported",
+				});
+			}
 		}
 		return null;
 	});
@@ -69,7 +93,15 @@ function useGeolocation() {
 	const bypassError = () => {
 		setBypassed(true);
 		setIsLoading(false);
-		trackCustomEvent("location_error_bypassed");
+		if (
+			typeof window !== "undefined" &&
+			import.meta.env.VITE_GA_MEASUREMENT_ID
+		) {
+			ReactGA.event({
+				category: "User",
+				action: "location_error_bypassed",
+			});
+		}
 	};
 
 	return { location, error: bypassed ? null : error, isLoading, bypassError };
@@ -243,7 +275,15 @@ function App() {
 						<button
 							type="button"
 							onClick={() => {
-								trackCustomEvent("location_retry");
+								if (
+									typeof window !== "undefined" &&
+									import.meta.env.VITE_GA_MEASUREMENT_ID
+								) {
+									ReactGA.event({
+										category: "User",
+										action: "location_retry",
+									});
+								}
 								window.location.reload();
 							}}
 							className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px] touch-manipulation"
@@ -277,7 +317,16 @@ function App() {
 							onClick={() => {
 								const newValue = !hasSittingFilter;
 								setHasSittingFilter(newValue);
-								trackCustomEvent(`filter_sitting_${newValue ? "on" : "off"}`);
+								if (
+									typeof window !== "undefined" &&
+									import.meta.env.VITE_GA_MEASUREMENT_ID
+								) {
+									ReactGA.event({
+										category: "Filter",
+										action: "filter_sitting",
+										label: newValue ? "on" : "off",
+									});
+								}
 							}}
 							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 								hasSittingFilter
@@ -295,7 +344,16 @@ function App() {
 							onClick={() => {
 								const newValue = !hasToiletFilter;
 								setHasToiletFilter(newValue);
-								trackCustomEvent(`filter_toilet_${newValue ? "on" : "off"}`);
+								if (
+									typeof window !== "undefined" &&
+									import.meta.env.VITE_GA_MEASUREMENT_ID
+								) {
+									ReactGA.event({
+										category: "Filter",
+										action: "filter_toilet",
+										label: newValue ? "on" : "off",
+									});
+								}
 							}}
 							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 								hasToiletFilter
@@ -313,7 +371,16 @@ function App() {
 							onClick={() => {
 								const newValue = !acceptsCardFilter;
 								setAcceptsCardFilter(newValue);
-								trackCustomEvent(`filter_card_${newValue ? "on" : "off"}`);
+								if (
+									typeof window !== "undefined" &&
+									import.meta.env.VITE_GA_MEASUREMENT_ID
+								) {
+									ReactGA.event({
+										category: "Filter",
+										action: "filter_card",
+										label: newValue ? "on" : "off",
+									});
+								}
 							}}
 							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
 								acceptsCardFilter
@@ -347,11 +414,16 @@ function App() {
 										const newValue =
 											priceLevelFilter === value ? undefined : value;
 										setPriceLevelFilter(newValue);
-										trackCustomEvent(
-											newValue
-												? `filter_price_${newValue}`
-												: "filter_price_none",
-										);
+										if (
+											typeof window !== "undefined" &&
+											import.meta.env.VITE_GA_MEASUREMENT_ID
+										) {
+											ReactGA.event({
+												category: "Filter",
+												action: "filter_price",
+												label: newValue || "none",
+											});
+										}
 									}}
 									className={`min-w-[44px] min-h-[36px] sm:min-h-[36px] px-2 sm:px-3 rounded-lg text-xs font-bold transition-all touch-manipulation ${
 										priceLevelFilter === value
@@ -375,7 +447,15 @@ function App() {
 									setHasToiletFilter(false);
 									setAcceptsCardFilter(false);
 									setPriceLevelFilter(undefined);
-									trackCustomEvent("clear_filters");
+									if (
+										typeof window !== "undefined" &&
+										import.meta.env.VITE_GA_MEASUREMENT_ID
+									) {
+										ReactGA.event({
+											category: "Filter",
+											action: "clear_filters",
+										});
+									}
 								}}
 								className="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 text-gray-400 hover:text-red-400 transition-colors flex items-center justify-center touch-manipulation"
 								aria-label="Clear all filters"
@@ -422,7 +502,15 @@ function App() {
 									setHasToiletFilter(false);
 									setAcceptsCardFilter(false);
 									setPriceLevelFilter(undefined);
-									trackCustomEvent("clear_filters");
+									if (
+										typeof window !== "undefined" &&
+										import.meta.env.VITE_GA_MEASUREMENT_ID
+									) {
+										ReactGA.event({
+											category: "Filter",
+											action: "clear_filters",
+										});
+									}
 								}}
 								className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px] touch-manipulation"
 							>

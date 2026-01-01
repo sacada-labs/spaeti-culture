@@ -4,13 +4,12 @@ import {
 	createRootRouteWithContext,
 	HeadContent,
 	Scripts,
-	useLocation,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { useEffect } from "react";
+import ReactGA from "react-ga4";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
-import { shouldLoadGA, trackPageView } from "../utils/analytics";
 
 const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
 
@@ -60,18 +59,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				rel: "stylesheet",
 				href: "https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap",
 			},
-			...(shouldLoadGA()
-				? [
-						{
-							rel: "preconnect",
-							href: "https://www.googletagmanager.com",
-						},
-						{
-							rel: "preconnect",
-							href: "https://www.google-analytics.com",
-						},
-					]
-				: []),
 		],
 	}),
 
@@ -79,41 +66,24 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	const location = useLocation();
-
-	// Track page views on route changes
+	// Send initial load page view event to Google Analytics
 	useEffect(() => {
-		trackPageView(location.pathname + location.searchStr);
-	}, [location.pathname, location.searchStr]);
+		if (typeof window !== "undefined" && GA_MEASUREMENT_ID) {
+			const path = window.location.pathname + window.location.search;
+			console.log("[GA] Sending initial pageview:", path);
+			try {
+				ReactGA.send({ hitType: "pageview", page: path });
+			} catch (error) {
+				console.error("[GA] Pageview error:", error);
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<html lang="en">
 			<head>
 				<HeadContent />
-				{/* Start of Google Analytics configuration */}
-				{shouldLoadGA() && (
-					<>
-						<script
-							async
-							src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-						/>
-
-						<script
-							// biome-ignore lint/security/noDangerouslySetInnerHtml: Required for Google Analytics initialization per Google's official documentation
-							dangerouslySetInnerHTML={{
-								__html: `
-									window.dataLayer = window.dataLayer || [];
-									function gtag(){dataLayer.push(arguments);}
-									gtag('js', new Date());
-									gtag('config', '${GA_MEASUREMENT_ID}', {
-										send_page_view: false
-									});
-								`,
-							}}
-						/>
-					</>
-				)}
-				{/* End of Google Analytics configuration */}
 			</head>
 			<body>
 				{children}
