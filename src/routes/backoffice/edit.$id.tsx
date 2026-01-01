@@ -38,7 +38,7 @@ function EditSpatiPage() {
 				<button
 					type="button"
 					onClick={() => window.history.back()}
-					className="px-6 py-3 bg-gray-800 text-white font-black uppercase tracking-wider rounded-xl hover:bg-gray-700 transition-all"
+					className="px-6 py-3 min-h-[48px] bg-gray-800 text-white font-black uppercase tracking-wider rounded-2xl hover:bg-gray-700 transition-all"
 				>
 					Go Back
 				</button>

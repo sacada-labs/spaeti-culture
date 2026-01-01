@@ -39,10 +39,10 @@ function LoginPage() {
 	};
 
 	return (
-		<main className="px-4 sm:px-6 py-20 max-w-md mx-auto">
-			<div className="bg-gray-900/40 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-8">
+		<main className="px-4 sm:px-6 py-12 max-w-md mx-auto">
+			<div className="bg-gray-900/40 border border-gray-800 rounded-3xl p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
 				<div className="text-center">
-					<h2 className="text-2xl font-black uppercase tracking-tight text-green-500">
+					<h2 className="text-3xl font-black uppercase tracking-tight text-green-500">
 						Backoffice
 					</h2>
 					<p className="text-gray-400 text-sm mt-2 uppercase tracking-widest font-bold">
@@ -108,7 +108,7 @@ function LoginPage() {
 					<button
 						type="submit"
 						disabled={mutation.isPending}
-						className="w-full py-4 bg-green-500 text-black font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-green-400 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+						className="w-full min-h-[48px] py-4 bg-green-500 text-black font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-green-400 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
 					>
 						{mutation.isPending ? (
 							<div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />

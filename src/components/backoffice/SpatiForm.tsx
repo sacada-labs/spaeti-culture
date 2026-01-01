@@ -87,7 +87,7 @@ export function SpatiForm({ initialData }: SpatiFormProps) {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className="space-y-8 bg-gray-900/40 border border-gray-800 rounded-3xl p-6 sm:p-10"
+			className="space-y-6 sm:space-y-8 bg-gray-900/40 border border-gray-800 rounded-3xl p-4 sm:p-6 lg:p-8"
 		>
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 				{/* Basic Info */}
@@ -311,7 +311,7 @@ export function SpatiForm({ initialData }: SpatiFormProps) {
 								name="latitude"
 								required
 								defaultValue={initialData?.location?.y || ""}
-								className="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-green-500 transition-colors"
+								className="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-green-500 transition-colors"
 								placeholder="52.5200"
 							/>
 						</div>
@@ -329,7 +329,7 @@ export function SpatiForm({ initialData }: SpatiFormProps) {
 								name="longitude"
 								required
 								defaultValue={initialData?.location?.x || ""}
-								className="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-green-500 transition-colors"
+								className="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-green-500 transition-colors"
 								placeholder="13.4050"
 							/>
 						</div>
@@ -347,7 +347,7 @@ export function SpatiForm({ initialData }: SpatiFormProps) {
 				<button
 					type="submit"
 					disabled={mutation.isPending}
-					className="flex-1 py-4 bg-green-500 text-black font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-green-400 transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-xl shadow-green-500/10"
+					className="flex-1 min-h-[48px] py-4 bg-green-500 text-black font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-green-400 transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-xl shadow-green-500/10"
 				>
 					{mutation.isPending ? (
 						<div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
@@ -361,7 +361,7 @@ export function SpatiForm({ initialData }: SpatiFormProps) {
 				<button
 					type="button"
 					onClick={() => navigate({ to: "/backoffice" })}
-					className="px-8 py-4 bg-gray-800 text-white font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-gray-700 transition-all flex items-center justify-center gap-3"
+					className="px-8 py-4 min-h-[48px] bg-gray-800 text-white font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-gray-700 transition-all flex items-center justify-center gap-3"
 				>
 					<X size={18} />
 					Cancel

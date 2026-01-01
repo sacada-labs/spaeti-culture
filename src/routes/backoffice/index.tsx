@@ -77,7 +77,7 @@ function AdminDashboard() {
 				</div>
 				<Link
 					to="/backoffice/new"
-					className="flex items-center gap-3 px-6 py-3 bg-green-500 text-black font-black uppercase tracking-wider rounded-2xl hover:bg-green-400 transition-all shadow-xl shadow-green-500/10"
+					className="flex items-center gap-3 px-6 py-3 bg-green-500 text-black font-black uppercase tracking-wider rounded-2xl hover:bg-green-400 transition-all shadow-xl shadow-green-500/10 min-h-[48px]"
 				>
 					<Plus size={18} />
 					Add New Späti
@@ -147,7 +147,7 @@ function AdminDashboard() {
 									})
 								}
 								disabled={toggleReviewMutation.isPending}
-								className={`px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border ${
+								className={`px-4 py-3 min-h-[48px] rounded-2xl text-[10px] font-black uppercase tracking-wider transition-all border ${
 									spati.reviewedAt
 										? "bg-amber-500/10 text-amber-500 border-amber-500/20 hover:bg-amber-500/20"
 										: "bg-green-500/10 text-green-500 border-green-500/20 hover:bg-green-500/20"
@@ -258,7 +258,7 @@ function AdminDashboard() {
 								type="button"
 								onClick={() => setDeleteModalOpen(null)}
 								disabled={deleteMutation.isPending}
-								className="flex-1 px-6 py-3 bg-gray-800 text-gray-300 font-bold uppercase tracking-wider rounded-xl hover:bg-gray-700 transition-all disabled:opacity-50"
+								className="flex-1 px-6 py-3 min-h-[48px] bg-gray-800 text-gray-300 font-bold uppercase tracking-wider rounded-2xl hover:bg-gray-700 transition-all disabled:opacity-50"
 							>
 								Cancel
 							</button>
@@ -266,7 +266,7 @@ function AdminDashboard() {
 								type="button"
 								onClick={() => deleteMutation.mutate(deleteModalOpen.id)}
 								disabled={deleteMutation.isPending}
-								className="flex-1 px-6 py-3 bg-red-500 text-white font-black uppercase tracking-wider rounded-xl hover:bg-red-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+								className="flex-1 px-6 py-3 min-h-[48px] bg-red-500 text-white font-black uppercase tracking-wider rounded-2xl hover:bg-red-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
 							>
 								{deleteMutation.isPending ? "Deleting..." : "Delete"}
 							</button>

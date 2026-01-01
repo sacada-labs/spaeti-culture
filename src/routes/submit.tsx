@@ -207,7 +207,7 @@ function SubmitPage() {
 									placeholder="https://maps.app.goo.gl/..."
 									className={`w-full bg-black border ${
 										formError ? "border-red-500" : "border-gray-800"
-									} rounded-xl pl-10 sm:pl-12 pr-4 py-3.5 sm:py-3 text-base sm:text-sm focus:outline-none focus:border-green-500 transition-colors touch-manipulation`}
+									} rounded-xl pl-10 sm:pl-12 pr-4 py-3 text-base sm:text-sm focus:outline-none focus:border-green-500 transition-colors touch-manipulation`}
 								/>
 							</div>
 							{formError ? (
@@ -237,7 +237,7 @@ function SubmitPage() {
 									onChange={(e) =>
 										updateSeating(e.target.value as SubmissionForm["seating"])
 									}
-									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3.5 sm:py-3 text-base sm:text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer text-gray-300 touch-manipulation min-h-[48px]"
+									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-base sm:text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer text-gray-300 touch-manipulation min-h-[48px]"
 								>
 									<option value="NO">No</option>
 									<option value="YES">Yes</option>
@@ -260,7 +260,7 @@ function SubmitPage() {
 											e.target.value as SubmissionForm["hasToilet"],
 										)
 									}
-									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3.5 sm:py-3 text-base sm:text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer text-gray-300 touch-manipulation min-h-[48px]"
+									className="custom-select w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-base sm:text-sm focus:outline-none focus:border-green-500 transition-colors appearance-none cursor-pointer text-gray-300 touch-manipulation min-h-[48px]"
 								>
 									<option value="NO">No</option>
 									<option value="YES">Yes</option>
@@ -279,7 +279,7 @@ function SubmitPage() {
 											type="button"
 											key={level}
 											onClick={() => updatePriceLevel(level)}
-											className={`flex-1 min-h-[44px] py-2 rounded-lg text-xs font-bold transition-all touch-manipulation ${
+											className={`flex-1 min-h-[48px] py-2 rounded-2xl text-xs font-bold transition-all touch-manipulation ${
 												formData.priceLevel === level
 													? "bg-green-500 text-black"
 													: "text-gray-400 hover:text-white"
@@ -305,7 +305,7 @@ function SubmitPage() {
 											type="button"
 											key={opt.id}
 											onClick={() => updatePayment(opt.id)}
-											className={`flex-1 min-h-[44px] py-2 rounded-lg text-[10px] uppercase font-bold transition-all touch-manipulation ${
+											className={`flex-1 min-h-[48px] py-2 rounded-2xl text-[10px] uppercase font-bold transition-all touch-manipulation ${
 												formData.payment === opt.id
 													? "bg-purple-500 text-white"
 													: "text-gray-400 hover:text-white"
@@ -322,7 +322,7 @@ function SubmitPage() {
 					<button
 						type="submit"
 						disabled={mutation.isPending || toast !== null}
-						className="w-full min-h-[52px] py-4 bg-green-500 text-black font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-green-400 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed group touch-manipulation"
+						className="w-full min-h-[48px] py-4 bg-green-500 text-black font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-green-400 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed group touch-manipulation"
 					>
 						{mutation.isPending ? (
 							<div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
