@@ -3,11 +3,14 @@ import type { QueryClient } from "@tanstack/react-query";
 import {
 	createRootRouteWithContext,
 	HeadContent,
+	Outlet,
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { useEffect } from "react";
 import ReactGA from "react-ga4";
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
@@ -62,8 +65,19 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 		],
 	}),
 
+	component: RootComponent,
 	shellComponent: RootDocument,
 });
+
+function RootComponent() {
+	return (
+		<div className="min-h-screen bg-black text-white selection:bg-green-500 selection:text-black">
+			<Header />
+			<Outlet />
+			<Footer />
+		</div>
+	);
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	// Send initial load page view event to Google Analytics

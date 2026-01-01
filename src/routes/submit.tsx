@@ -4,8 +4,6 @@ import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { AlertCircle, CheckCircle, Globe, Send } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { z } from "zod";
-import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
 import { db } from "../db";
 import {
 	hasToiletEnum,
@@ -173,9 +171,7 @@ function SubmitPage() {
 	};
 
 	return (
-		<div className="min-h-screen bg-black text-white selection:bg-green-500 selection:text-black">
-			<Header />
-
+		<>
 			{toast && (
 				<Toast
 					message={toast.message}
@@ -342,8 +338,6 @@ function SubmitPage() {
 					</button>
 				</form>
 			</main>
-
-			<Footer />
-		</div>
+		</>
 	);
 }

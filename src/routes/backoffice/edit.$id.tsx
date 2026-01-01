@@ -2,8 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { SpatiForm } from "../../components/backoffice/SpatiForm";
-import { Footer } from "../../components/Footer";
-import { Header } from "../../components/Header";
 import { Loading } from "../../components/Loading";
 import { backofficeBeforeLoad } from "../../lib/auth";
 import { getAdminSpatiById } from "../../lib/backoffice/server-functions";
@@ -49,23 +47,17 @@ function EditSpatiPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-black text-white selection:bg-green-500 selection:text-black">
-			<Header />
+		<main className="px-4 sm:px-6 py-12 max-w-5xl mx-auto">
+			<div className="mb-10">
+				<h2 className="text-3xl font-black uppercase tracking-tight">
+					Edit Späti
+				</h2>
+				<p className="text-gray-400 mt-2 text-sm uppercase tracking-widest font-bold">
+					Updating: {spati.name}
+				</p>
+			</div>
 
-			<main className="px-4 sm:px-6 py-12 max-w-5xl mx-auto">
-				<div className="mb-10">
-					<h2 className="text-3xl font-black uppercase tracking-tight">
-						Edit Späti
-					</h2>
-					<p className="text-gray-400 mt-2 text-sm uppercase tracking-widest font-bold">
-						Updating: {spati.name}
-					</p>
-				</div>
-
-				<SpatiForm initialData={spati} />
-			</main>
-
-			<Footer />
-		</div>
+			<SpatiForm initialData={spati} />
+		</main>
 	);
 }

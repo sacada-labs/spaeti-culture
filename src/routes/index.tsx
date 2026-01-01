@@ -14,8 +14,6 @@ import {
 import { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 import { z } from "zod";
-import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
 import { db } from "../db";
 import { spatis } from "../db/schema";
 import { loggerMiddleware } from "../lib/logger";
@@ -301,299 +299,291 @@ function App() {
 	}
 
 	return (
-		<div className="min-h-screen bg-black text-white selection:bg-green-500 selection:text-black">
-			<Header />
+		<main className="px-4 sm:px-6 pb-32 max-w-7xl mx-auto">
+			{/* Filters Section */}
+			<div className="mb-6 sm:mb-10 sticky top-2 sm:top-4 z-10 -mx-4 sm:mx-0 px-4 sm:px-0">
+				<div className="bg-black/80 backdrop-blur-xl border border-gray-800 p-2 sm:p-3 rounded-2xl flex flex-wrap items-center gap-2 sm:gap-3 shadow-2xl overflow-x-auto sm:overflow-x-visible">
+					<button
+						type="button"
+						aria-pressed={hasSittingFilter}
+						onClick={() => {
+							const newValue = !hasSittingFilter;
+							setHasSittingFilter(newValue);
+							if (
+								typeof window !== "undefined" &&
+								import.meta.env.VITE_GA_MEASUREMENT_ID
+							) {
+								ReactGA.event({
+									category: "Filter",
+									action: "filter_sitting",
+									label: newValue ? "on" : "off",
+								});
+							}
+						}}
+						className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
+							hasSittingFilter
+								? "bg-green-500 text-black"
+								: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
+						}`}
+					>
+						<Armchair size={16} className="flex-shrink-0" />
+						<span className="hidden sm:inline">Sitting</span>
+					</button>
 
-			<main className="px-4 sm:px-6 pb-32 max-w-7xl mx-auto">
-				{/* Filters Section */}
-				<div className="mb-6 sm:mb-10 sticky top-2 sm:top-4 z-10 -mx-4 sm:mx-0 px-4 sm:px-0">
-					<div className="bg-black/80 backdrop-blur-xl border border-gray-800 p-2 sm:p-3 rounded-2xl flex flex-wrap items-center gap-2 sm:gap-3 shadow-2xl overflow-x-auto sm:overflow-x-visible">
-						<button
-							type="button"
-							aria-pressed={hasSittingFilter}
-							onClick={() => {
-								const newValue = !hasSittingFilter;
-								setHasSittingFilter(newValue);
-								if (
-									typeof window !== "undefined" &&
-									import.meta.env.VITE_GA_MEASUREMENT_ID
-								) {
-									ReactGA.event({
-										category: "Filter",
-										action: "filter_sitting",
-										label: newValue ? "on" : "off",
-									});
-								}
-							}}
-							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
-								hasSittingFilter
-									? "bg-green-500 text-black"
-									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
-							}`}
-						>
-							<Armchair size={16} className="flex-shrink-0" />
-							<span className="hidden sm:inline">Sitting</span>
-						</button>
+					<button
+						type="button"
+						aria-pressed={hasToiletFilter}
+						onClick={() => {
+							const newValue = !hasToiletFilter;
+							setHasToiletFilter(newValue);
+							if (
+								typeof window !== "undefined" &&
+								import.meta.env.VITE_GA_MEASUREMENT_ID
+							) {
+								ReactGA.event({
+									category: "Filter",
+									action: "filter_toilet",
+									label: newValue ? "on" : "off",
+								});
+							}
+						}}
+						className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
+							hasToiletFilter
+								? "bg-green-500 text-black"
+								: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
+						}`}
+					>
+						<Toilet size={16} className="flex-shrink-0" />
+						<span className="hidden sm:inline">Toilet</span>
+					</button>
 
-						<button
-							type="button"
-							aria-pressed={hasToiletFilter}
-							onClick={() => {
-								const newValue = !hasToiletFilter;
-								setHasToiletFilter(newValue);
-								if (
-									typeof window !== "undefined" &&
-									import.meta.env.VITE_GA_MEASUREMENT_ID
-								) {
-									ReactGA.event({
-										category: "Filter",
-										action: "filter_toilet",
-										label: newValue ? "on" : "off",
-									});
-								}
-							}}
-							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
-								hasToiletFilter
-									? "bg-green-500 text-black"
-									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
-							}`}
-						>
-							<Toilet size={16} className="flex-shrink-0" />
-							<span className="hidden sm:inline">Toilet</span>
-						</button>
+					<button
+						type="button"
+						aria-pressed={acceptsCardFilter}
+						onClick={() => {
+							const newValue = !acceptsCardFilter;
+							setAcceptsCardFilter(newValue);
+							if (
+								typeof window !== "undefined" &&
+								import.meta.env.VITE_GA_MEASUREMENT_ID
+							) {
+								ReactGA.event({
+									category: "Filter",
+									action: "filter_card",
+									label: newValue ? "on" : "off",
+								});
+							}
+						}}
+						className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
+							acceptsCardFilter
+								? "bg-green-500 text-black"
+								: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
+						}`}
+					>
+						<CreditCard size={16} className="flex-shrink-0" />
+						<span className="hidden sm:inline">Card</span>
+					</button>
 
-						<button
-							type="button"
-							aria-pressed={acceptsCardFilter}
-							onClick={() => {
-								const newValue = !acceptsCardFilter;
-								setAcceptsCardFilter(newValue);
-								if (
-									typeof window !== "undefined" &&
-									import.meta.env.VITE_GA_MEASUREMENT_ID
-								) {
-									ReactGA.event({
-										category: "Filter",
-										action: "filter_card",
-										label: newValue ? "on" : "off",
-									});
-								}
-							}}
-							className={`min-h-[44px] min-w-[44px] sm:min-w-[120px] justify-center px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 touch-manipulation ${
-								acceptsCardFilter
-									? "bg-green-500 text-black"
-									: "bg-gray-900 text-gray-400 hover:text-white hover:bg-gray-800"
-							}`}
-						>
-							<CreditCard size={16} className="flex-shrink-0" />
-							<span className="hidden sm:inline">Card</span>
-						</button>
+					<div className="h-6 w-px bg-gray-800 mx-1 hidden sm:block" />
 
-						<div className="h-6 w-px bg-gray-800 mx-1 hidden sm:block" />
-
-						<fieldset
-							aria-label="Price level filter"
-							className="flex items-center gap-1.5 sm:gap-1 bg-gray-900 p-1 rounded-xl border-0 m-0 min-h-[44px]"
-						>
-							{(
-								[
-									{ value: "$", label: "Budget" },
-									{ value: "$$", label: "Moderate" },
-									{ value: "$$$", label: "Premium" },
-								] as const
-							).map(({ value, label }) => (
-								<button
-									type="button"
-									key={value}
-									aria-pressed={priceLevelFilter === value}
-									aria-label={label}
-									onClick={() => {
-										const newValue =
-											priceLevelFilter === value ? undefined : value;
-										setPriceLevelFilter(newValue);
-										if (
-											typeof window !== "undefined" &&
-											import.meta.env.VITE_GA_MEASUREMENT_ID
-										) {
-											ReactGA.event({
-												category: "Filter",
-												action: "filter_price",
-												label: newValue || "none",
-											});
-										}
-									}}
-									className={`min-w-[44px] min-h-[36px] sm:min-h-[36px] px-2 sm:px-3 rounded-lg text-xs font-bold transition-all touch-manipulation ${
-										priceLevelFilter === value
-											? "bg-green-500 text-black"
-											: "text-gray-400 hover:text-white"
-									}`}
-								>
-									{value}
-								</button>
-							))}
-						</fieldset>
-
-						{(hasSittingFilter ||
-							hasToiletFilter ||
-							acceptsCardFilter ||
-							priceLevelFilter) && (
+					<fieldset
+						aria-label="Price level filter"
+						className="flex items-center gap-1.5 sm:gap-1 bg-gray-900 p-1 rounded-xl border-0 m-0 min-h-[44px]"
+					>
+						{(
+							[
+								{ value: "$", label: "Budget" },
+								{ value: "$$", label: "Moderate" },
+								{ value: "$$$", label: "Premium" },
+							] as const
+						).map(({ value, label }) => (
 							<button
 								type="button"
+								key={value}
+								aria-pressed={priceLevelFilter === value}
+								aria-label={label}
 								onClick={() => {
-									setHasSittingFilter(false);
-									setHasToiletFilter(false);
-									setAcceptsCardFilter(false);
-									setPriceLevelFilter(undefined);
+									const newValue =
+										priceLevelFilter === value ? undefined : value;
+									setPriceLevelFilter(newValue);
 									if (
 										typeof window !== "undefined" &&
 										import.meta.env.VITE_GA_MEASUREMENT_ID
 									) {
 										ReactGA.event({
 											category: "Filter",
-											action: "clear_filters",
+											action: "filter_price",
+											label: newValue || "none",
 										});
 									}
 								}}
-								className="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 text-gray-400 hover:text-red-400 transition-colors flex items-center justify-center touch-manipulation"
-								aria-label="Clear all filters"
+								className={`min-w-[44px] min-h-[36px] sm:min-h-[36px] px-2 sm:px-3 rounded-lg text-xs font-bold transition-all touch-manipulation ${
+									priceLevelFilter === value
+										? "bg-green-500 text-black"
+										: "text-gray-400 hover:text-white"
+								}`}
 							>
-								<Trash2 size={18} />
+								{value}
 							</button>
-						)}
-					</div>
-				</div>
-
-				{/* Späti Grid */}
-				{spatiesQuery.isPending ? (
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-						{[1, 2, 3, 4, 5, 6].map((i) => (
-							<div
-								key={`skeleton-${i}`}
-								className="h-64 bg-gray-900/50 border border-gray-800 rounded-2xl animate-pulse"
-							/>
 						))}
-					</div>
-				) : spatiesQuery.isError ? (
-					<div className="bg-red-500/10 border border-red-500/20 p-6 sm:p-8 rounded-2xl text-center">
-						<p className="text-red-400 text-sm sm:text-base">
-							Failed to load Spätis: {spatiesQuery.error.message}
-						</p>
-					</div>
-				) : spatiesQuery.data?.length === 0 ? (
-					<div className="bg-gray-900/50 border border-gray-800 p-8 sm:p-12 rounded-2xl text-center">
-						<Search size={48} className="mx-auto text-gray-700 mb-4 sm:mb-6" />
-						<h3 className="text-lg sm:text-xl font-bold mb-2">
-							No Spätis found
-						</h3>
-						<p className="text-gray-400 text-sm sm:text-base max-w-xs mx-auto mb-6 sm:mb-8">
-							Try adjusting your filters or search area to find more results.
-						</p>
-						{(hasSittingFilter ||
-							hasToiletFilter ||
-							acceptsCardFilter ||
-							priceLevelFilter) && (
-							<button
-								type="button"
-								onClick={() => {
-									setHasSittingFilter(false);
-									setHasToiletFilter(false);
-									setAcceptsCardFilter(false);
-									setPriceLevelFilter(undefined);
-									if (
-										typeof window !== "undefined" &&
-										import.meta.env.VITE_GA_MEASUREMENT_ID
-									) {
-										ReactGA.event({
-											category: "Filter",
-											action: "clear_filters",
-										});
-									}
-								}}
-								className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px] touch-manipulation"
-							>
-								Clear All Filters
-							</button>
-						)}
-					</div>
-				) : (
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-						{spatiesQuery.data.map((spati) => (
-							<div
-								key={spati.id}
-								className="group bg-gray-900/40 border border-gray-800 rounded-2xl p-4 sm:p-6 hover:border-green-500/50 transition-all hover:shadow-2xl hover:shadow-green-500/5 flex flex-col spati-card opacity-0 min-h-[200px] sm:min-h-[240px]"
-							>
-								<div className="flex justify-between items-start mb-3 sm:mb-4 gap-2">
-									<h2 className="text-lg sm:text-xl font-bold group-hover:text-green-500 transition-colors leading-tight">
-										{spati.name}
-									</h2>
-									<div className="flex gap-0.5">
-										{[1, 2, 3].map((level) => (
-											<span
-												key={`price-${spati.id}-${level}`}
-												className={`text-xs ${
-													level <= (spati.priceLevel?.length || 0)
-														? "text-green-500"
-														: "text-gray-700"
-												}`}
-											>
-												$
-											</span>
-										))}
-									</div>
-								</div>
+					</fieldset>
 
-								<div className="flex items-start gap-2 mb-3 sm:mb-4">
-									<MapPin
-										size={14}
-										className="text-gray-400 mt-0.5 sm:mt-1 flex-shrink-0"
-									/>
-									<div className="flex-1 min-w-0">
-										<p className="text-gray-400 text-xs sm:text-sm leading-relaxed break-words">
-											{spati.address}
-										</p>
-										{"distance" in spati &&
-											typeof (spati as typeof spati & { distance?: number })
-												.distance === "number" && (
-												<p className="text-green-500 text-xs font-bold mt-1 flex items-center gap-1">
-													<Navigation size={12} />
-													{formatDistance(
-														(spati as typeof spati & { distance: number })
-															.distance,
-													) || ""}
-												</p>
-											)}
-									</div>
-								</div>
+					{(hasSittingFilter ||
+						hasToiletFilter ||
+						acceptsCardFilter ||
+						priceLevelFilter) && (
+						<button
+							type="button"
+							onClick={() => {
+								setHasSittingFilter(false);
+								setHasToiletFilter(false);
+								setAcceptsCardFilter(false);
+								setPriceLevelFilter(undefined);
+								if (
+									typeof window !== "undefined" &&
+									import.meta.env.VITE_GA_MEASUREMENT_ID
+								) {
+									ReactGA.event({
+										category: "Filter",
+										action: "clear_filters",
+									});
+								}
+							}}
+							className="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 text-gray-400 hover:text-red-400 transition-colors flex items-center justify-center touch-manipulation"
+							aria-label="Clear all filters"
+						>
+							<Trash2 size={18} />
+						</button>
+					)}
+				</div>
+			</div>
 
-								<div className="mt-auto pt-4 sm:pt-6 border-t border-gray-800/50 flex flex-wrap gap-2">
-									{spati.seating === "YES" && (
-										<div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-green-500/10 text-green-500 border border-green-500/20">
-											<Armchair size={10} />
-											Seating
-										</div>
-									)}
-
-									{spati.hasToilet === "YES" && (
-										<div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
-											<Toilet size={10} />
-											Toilet
-										</div>
-									)}
-
-									{spati.payment === "CARD" && (
-										<div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/20">
-											<CreditCard size={10} />
-											Card
-										</div>
-									)}
+			{/* Späti Grid */}
+			{spatiesQuery.isPending ? (
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+					{[1, 2, 3, 4, 5, 6].map((i) => (
+						<div
+							key={`skeleton-${i}`}
+							className="h-64 bg-gray-900/50 border border-gray-800 rounded-2xl animate-pulse"
+						/>
+					))}
+				</div>
+			) : spatiesQuery.isError ? (
+				<div className="bg-red-500/10 border border-red-500/20 p-6 sm:p-8 rounded-2xl text-center">
+					<p className="text-red-400 text-sm sm:text-base">
+						Failed to load Spätis: {spatiesQuery.error.message}
+					</p>
+				</div>
+			) : spatiesQuery.data?.length === 0 ? (
+				<div className="bg-gray-900/50 border border-gray-800 p-8 sm:p-12 rounded-2xl text-center">
+					<Search size={48} className="mx-auto text-gray-700 mb-4 sm:mb-6" />
+					<h3 className="text-lg sm:text-xl font-bold mb-2">No Spätis found</h3>
+					<p className="text-gray-400 text-sm sm:text-base max-w-xs mx-auto mb-6 sm:mb-8">
+						Try adjusting your filters or search area to find more results.
+					</p>
+					{(hasSittingFilter ||
+						hasToiletFilter ||
+						acceptsCardFilter ||
+						priceLevelFilter) && (
+						<button
+							type="button"
+							onClick={() => {
+								setHasSittingFilter(false);
+								setHasToiletFilter(false);
+								setAcceptsCardFilter(false);
+								setPriceLevelFilter(undefined);
+								if (
+									typeof window !== "undefined" &&
+									import.meta.env.VITE_GA_MEASUREMENT_ID
+								) {
+									ReactGA.event({
+										category: "Filter",
+										action: "clear_filters",
+									});
+								}
+							}}
+							className="px-6 py-3 bg-gray-800 text-white font-bold rounded-full hover:bg-gray-700 transition-colors min-h-[48px] touch-manipulation"
+						>
+							Clear All Filters
+						</button>
+					)}
+				</div>
+			) : (
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+					{spatiesQuery.data.map((spati) => (
+						<div
+							key={spati.id}
+							className="group bg-gray-900/40 border border-gray-800 rounded-2xl p-4 sm:p-6 hover:border-green-500/50 transition-all hover:shadow-2xl hover:shadow-green-500/5 flex flex-col spati-card opacity-0 min-h-[200px] sm:min-h-[240px]"
+						>
+							<div className="flex justify-between items-start mb-3 sm:mb-4 gap-2">
+								<h2 className="text-lg sm:text-xl font-bold group-hover:text-green-500 transition-colors leading-tight">
+									{spati.name}
+								</h2>
+								<div className="flex gap-0.5">
+									{[1, 2, 3].map((level) => (
+										<span
+											key={`price-${spati.id}-${level}`}
+											className={`text-xs ${
+												level <= (spati.priceLevel?.length || 0)
+													? "text-green-500"
+													: "text-gray-700"
+											}`}
+										>
+											$
+										</span>
+									))}
 								</div>
 							</div>
-						))}
-					</div>
-				)}
-			</main>
 
-			<Footer />
-		</div>
+							<div className="flex items-start gap-2 mb-3 sm:mb-4">
+								<MapPin
+									size={14}
+									className="text-gray-400 mt-0.5 sm:mt-1 flex-shrink-0"
+								/>
+								<div className="flex-1 min-w-0">
+									<p className="text-gray-400 text-xs sm:text-sm leading-relaxed break-words">
+										{spati.address}
+									</p>
+									{"distance" in spati &&
+										typeof (spati as typeof spati & { distance?: number })
+											.distance === "number" && (
+											<p className="text-green-500 text-xs font-bold mt-1 flex items-center gap-1">
+												<Navigation size={12} />
+												{formatDistance(
+													(spati as typeof spati & { distance: number })
+														.distance,
+												) || ""}
+											</p>
+										)}
+								</div>
+							</div>
+
+							<div className="mt-auto pt-4 sm:pt-6 border-t border-gray-800/50 flex flex-wrap gap-2">
+								{spati.seating === "YES" && (
+									<div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-green-500/10 text-green-500 border border-green-500/20">
+										<Armchair size={10} />
+										Seating
+									</div>
+								)}
+
+								{spati.hasToilet === "YES" && (
+									<div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
+										<Toilet size={10} />
+										Toilet
+									</div>
+								)}
+
+								{spati.payment === "CARD" && (
+									<div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/20">
+										<CreditCard size={10} />
+										Card
+									</div>
+								)}
+							</div>
+						</div>
+					))}
+				</div>
+			)}
+		</main>
 	);
 }
