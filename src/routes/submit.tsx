@@ -25,7 +25,7 @@ function Toast({
 	onClose: () => void;
 }) {
 	useEffect(() => {
-		const timer = setTimeout(onClose, 5000);
+		const timer = setTimeout(onClose, 3000);
 		return () => clearTimeout(timer);
 	}, [onClose]);
 
@@ -72,7 +72,7 @@ function Toast({
 }
 
 const submitSubmissionSchema = z.object({
-	googleMapsUrl: z.string().url("Please enter a valid Google Maps URL"),
+	googleMapsUrl: z.url(),
 	seating: z.enum(seatingEnum.enumValues),
 	hasToilet: z.enum(hasToiletEnum.enumValues),
 	priceLevel: z.enum(priceLevelEnum.enumValues),
@@ -92,6 +92,7 @@ const submitSubmission = createServerFn()
 			payment: data.payment,
 			reviewedAt: null,
 		});
+		console.log("Submission inserted");
 		return { success: true };
 	});
 
