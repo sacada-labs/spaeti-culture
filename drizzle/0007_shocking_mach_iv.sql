@@ -1,0 +1,1 @@
+ALTER TYPE "public"."seating" ADD VALUE 'UNKNOWN';

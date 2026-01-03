@@ -7,7 +7,7 @@ import {
 	timestamp,
 } from "drizzle-orm/pg-core";
 
-export const seatingEnum = pgEnum("seating", ["YES", "NO"]);
+export const seatingEnum = pgEnum("seating", ["YES", "NO", "UNKNOWN"]);
 export const priceLevelEnum = pgEnum("price_level", ["$$$", "$$", "$"]);
 export const paymentEnum = pgEnum("payment", ["CARD", "CASH_ONLY"]);
 export const hasToiletEnum = pgEnum("has_toilet", ["YES", "NO"]);

@@ -43,6 +43,13 @@
       "when": 1767292405031,
       "tag": "0006_smiling_human_fly",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1767480887821,
+      "tag": "0007_shocking_mach_iv",
+      "breakpoints": true
     }
   ]
 }

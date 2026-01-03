@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { useId, useState } from "react";
 import { Loading } from "../../components/Loading";
-import { backofficeBeforeLoad } from "../../lib/auth";
+import { backofficeBeforeLoad } from "../../lib/backoffice/backoffice-auth";
 import {
 	deleteSpati,
 	getAdminSpatis,

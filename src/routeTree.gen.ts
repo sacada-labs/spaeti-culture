@@ -16,6 +16,7 @@ import { Route as BackofficeIndexRouteImport } from './routes/backoffice/index'
 import { Route as BackofficeNewRouteImport } from './routes/backoffice/new'
 import { Route as BackofficeLoginRouteImport } from './routes/backoffice/login'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
+import { Route as ApiSpaetisIndexRouteImport } from './routes/api/spaetis/index'
 import { Route as BackofficeEditIdRouteImport } from './routes/backoffice/edit.$id'
 
 const SubmitRoute = SubmitRouteImport.update({
@@ -53,6 +54,11 @@ const ApiHealthRoute = ApiHealthRouteImport.update({
   path: '/api/health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSpaetisIndexRoute = ApiSpaetisIndexRouteImport.update({
+  id: '/api/spaetis/',
+  path: '/api/spaetis/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BackofficeEditIdRoute = BackofficeEditIdRouteImport.update({
   id: '/backoffice/edit/$id',
   path: '/backoffice/edit/$id',
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/backoffice/new': typeof BackofficeNewRoute
   '/backoffice': typeof BackofficeIndexRoute
   '/backoffice/edit/$id': typeof BackofficeEditIdRoute
+  '/api/spaetis': typeof ApiSpaetisIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/backoffice/new': typeof BackofficeNewRoute
   '/backoffice': typeof BackofficeIndexRoute
   '/backoffice/edit/$id': typeof BackofficeEditIdRoute
+  '/api/spaetis': typeof ApiSpaetisIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/backoffice/new': typeof BackofficeNewRoute
   '/backoffice/': typeof BackofficeIndexRoute
   '/backoffice/edit/$id': typeof BackofficeEditIdRoute
+  '/api/spaetis/': typeof ApiSpaetisIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/backoffice/new'
     | '/backoffice'
     | '/backoffice/edit/$id'
+    | '/api/spaetis'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/backoffice/new'
     | '/backoffice'
     | '/backoffice/edit/$id'
+    | '/api/spaetis'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/backoffice/new'
     | '/backoffice/'
     | '/backoffice/edit/$id'
+    | '/api/spaetis/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   BackofficeNewRoute: typeof BackofficeNewRoute
   BackofficeIndexRoute: typeof BackofficeIndexRoute
   BackofficeEditIdRoute: typeof BackofficeEditIdRoute
+  ApiSpaetisIndexRoute: typeof ApiSpaetisIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -185,6 +198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/spaetis/': {
+      id: '/api/spaetis/'
+      path: '/api/spaetis'
+      fullPath: '/api/spaetis'
+      preLoaderRoute: typeof ApiSpaetisIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/backoffice/edit/$id': {
       id: '/backoffice/edit/$id'
       path: '/backoffice/edit/$id'
@@ -204,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   BackofficeNewRoute: BackofficeNewRoute,
   BackofficeIndexRoute: BackofficeIndexRoute,
   BackofficeEditIdRoute: BackofficeEditIdRoute,
+  ApiSpaetisIndexRoute: ApiSpaetisIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

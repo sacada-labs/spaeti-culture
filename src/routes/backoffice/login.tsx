@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Lock, User } from "lucide-react";
 import { useState } from "react";
 import type { z } from "zod";
-import { login, type loginSchema } from "../../lib/auth";
+import { login, type loginSchema } from "../../lib/backoffice/backoffice-auth";
 
 export const Route = createFileRoute("/backoffice/login")({
 	component: LoginPage,

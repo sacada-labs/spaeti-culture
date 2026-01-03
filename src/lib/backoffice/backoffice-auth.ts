@@ -3,7 +3,7 @@ import { createMiddleware, createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { jwtVerify, SignJWT } from "jose";
 import { z } from "zod";
-import { loggerMiddleware } from "./logger";
+import { loggerMiddleware } from "../logger";
 
 const AUTH_COOKIE_NAME = "backoffice_auth";
 

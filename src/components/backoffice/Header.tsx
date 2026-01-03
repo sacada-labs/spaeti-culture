@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { LayoutDashboard, LogOut, Plus } from "lucide-react";
-import { logout } from "../../lib/auth";
+import { logout } from "../../lib/backoffice/backoffice-auth";
 
 export function BackofficeHeader() {
 	const navigate = useNavigate();

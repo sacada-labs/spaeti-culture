@@ -9,7 +9,7 @@ import {
 	seatingEnum,
 	spatis,
 } from "../../db/schema";
-import { authMiddleware } from "../auth";
+import { authMiddleware } from "./backoffice-auth";
 import { loggerMiddleware } from "../logger";
 
 export const spatiSchema = z.object({

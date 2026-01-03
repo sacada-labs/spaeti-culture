@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SpatiForm } from "../../components/backoffice/SpatiForm";
-import { backofficeBeforeLoad } from "../../lib/auth";
+import { backofficeBeforeLoad } from "../../lib/backoffice/backoffice-auth";
 
 export const Route = createFileRoute("/backoffice/new")({
 	beforeLoad: backofficeBeforeLoad,

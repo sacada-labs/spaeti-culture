@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { SpatiForm } from "../../components/backoffice/SpatiForm";
 import { Loading } from "../../components/Loading";
-import { backofficeBeforeLoad } from "../../lib/auth";
+import { backofficeBeforeLoad } from "../../lib/backoffice/backoffice-auth";
 import { getAdminSpatiById } from "../../lib/backoffice/server-functions";
 
 export const Route = createFileRoute("/backoffice/edit/$id")({
