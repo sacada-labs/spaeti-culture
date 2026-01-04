@@ -32,8 +32,11 @@ export async function storeSpaeti(
 	spaeti: z.infer<typeof spaetiSchema>,
 ): Promise<number> {
 	try {
+		const { latitude, longitude, ...rest } = spaeti;
+
 		const values = {
-			...spaeti,
+			...rest,
+			location: { x: longitude, y: latitude },
 			reviewedAt: spaeti.reviewedAt ? new Date(spaeti.reviewedAt) : null,
 			updatedAt: new Date(),
 		};
