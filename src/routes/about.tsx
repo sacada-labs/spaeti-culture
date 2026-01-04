@@ -76,7 +76,7 @@ function About() {
 					</a>
 
 					<a
-						href="https://github.com/sacadalabs/sit-in-spaeti"
+						href="https://github.com/sacada-labs/spaeti-culture"
 						target="_blank"
 						rel="noopener noreferrer"
 						className="flex items-center gap-3 min-h-[44px] px-2 py-2 text-gray-400 hover:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-black rounded-lg transition-colors touch-manipulation group"
