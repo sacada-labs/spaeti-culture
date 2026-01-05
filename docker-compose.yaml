@@ -3,7 +3,7 @@ services:
     image: postgis/postgis:17-master
     platform: linux/amd64
     ports:
-      - 5432:5432
+      - 54321:5432
     environment:
       POSTGRES_USER: sit-in-spaeti
       POSTGRES_PASSWORD: sit-in-spaeti

@@ -119,6 +119,7 @@ function generateSpati() {
 		neighborhood: neighborhood.name,
 		zipCode: neighborhood.zipCode,
 		location: sql`ST_SetSRID(ST_MakePoint(${point.lon}, ${point.lat}), 4326)`,
+		googleMapsUrl: "https://maps.app.goo.gl/Jy5WtQzyBe3QXens7",
 		seating: seatingOptions[Math.floor(Math.random() * seatingOptions.length)],
 		hasToilet:
 			hasToiletOptions[Math.floor(Math.random() * hasToiletOptions.length)],
