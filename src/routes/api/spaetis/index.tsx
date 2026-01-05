@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import type { z } from "zod";
 import {
 	apiError,
 	apiSuccess,
 	validateApiKey,
 } from "../../../lib/api/api-auth";
 import { spaetiSchema, storeSpaeti } from "../../../lib/api/spaeti-service";
-import type { z } from "zod";
 
 export const Route = createFileRoute("/api/spaetis/")({
 	server: {

@@ -9,8 +9,8 @@ import {
 	seatingEnum,
 	spatis,
 } from "../../db/schema";
-import { authMiddleware } from "./backoffice-auth";
 import { loggerMiddleware } from "../logger";
+import { authMiddleware } from "./backoffice-auth";
 
 export const spatiSchema = z.object({
 	id: z.number().optional(),

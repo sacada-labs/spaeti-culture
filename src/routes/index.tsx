@@ -138,6 +138,21 @@ const fetchSpatis = createServerFn()
 			longitude,
 		} = data;
 
+		const getGoogleMapsUrl = (
+			googleMapsUrl: string | null,
+			address: string | null,
+			zipCode: string | null,
+		): string => {
+			if (googleMapsUrl) {
+				return googleMapsUrl.trim();
+			}
+			if (address && zipCode) {
+				const fullAddress = `${address.trim()}, ${zipCode.trim()}`;
+				return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
+			}
+			return "#";
+		};
+
 		const conditions = [isNotNull(spatis.reviewedAt)];
 
 		if (hasToilet !== undefined) {
@@ -172,6 +187,7 @@ const fetchSpatis = createServerFn()
 					neighborhood: spatis.neighborhood,
 					zipCode: spatis.zipCode,
 					location: spatis.location,
+					googleMapsUrl: spatis.googleMapsUrl,
 					seating: spatis.seating,
 					hasToilet: spatis.hasToilet,
 					priceLevel: spatis.priceLevel,
@@ -191,11 +207,25 @@ const fetchSpatis = createServerFn()
 						ST_MakePoint(${longitude}, ${latitude})
 					)`,
 				);
-			return records;
+			return records.map((spati) => ({
+				...spati,
+				googleMapsUrl: getGoogleMapsUrl(
+					spati.googleMapsUrl,
+					spati.address,
+					spati.zipCode,
+				),
+			}));
 		}
 
 		const records = await baseQuery;
-		return records;
+		return records.map((spati) => ({
+			...spati,
+			googleMapsUrl: getGoogleMapsUrl(
+				spati.googleMapsUrl,
+				spati.address,
+				spati.zipCode,
+			),
+		}));
 	});
 
 function App() {
@@ -516,9 +546,15 @@ function App() {
 							className="group bg-gray-900/40 border border-gray-800 rounded-2xl p-4 sm:p-6 hover:border-green-500/50 transition-all hover:shadow-2xl hover:shadow-green-500/5 flex flex-col spati-card opacity-0 min-h-[200px] sm:min-h-[240px]"
 						>
 							<div className="flex justify-between items-start mb-3 sm:mb-4 gap-2">
-								<h2 className="text-lg sm:text-xl font-bold group-hover:text-green-500 transition-colors leading-tight">
+								<a
+									href={spati.googleMapsUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-lg sm:text-xl font-bold group-hover:text-green-500 transition-colors leading-tight cursor-pointer hover:underline"
+									aria-label={`Open ${spati.name} on Google Maps`}
+								>
 									{spati.name}
-								</h2>
+								</a>
 								<div className="flex gap-0.5">
 									{[1, 2, 3].map((level) => (
 										<span
